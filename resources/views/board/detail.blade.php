@@ -164,8 +164,8 @@
       <input type="hidden" name="board_idx" value="{{ $idx }}">
       <input type="hidden" name="board_url" value="{{ $boardUrl }}">
       <textarea name="comment_content" id="" cols="30" rows="10"></textarea>
-      <button type="submit" class="btn-comment-add">등록</button>
-      <button type="button" class="btn-comment-close">닫기</button>
+      <button type="submit" class="btn btn-link btn-comment-add">등록</button>
+      <button type="button" class="btn btn-link btn-comment-close">닫기</button>
     </form>
   `;
           commentBox.appendChild(divEle);
