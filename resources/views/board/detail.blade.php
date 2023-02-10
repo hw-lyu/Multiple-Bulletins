@@ -86,10 +86,10 @@
     <script>
       let btnRemove = document.querySelector('.head .btn-remove'),
         btnLike = document.querySelector('.head .btn-like'),
-        btnCommentAdd = [...document.querySelectorAll('.btn-comment-answer')],
         commentWrap = document.querySelector('.comment-wrap'),
         commentBtnWrap = document.querySelector('.comment-btn-wrap');
 
+      // 글 삭제
       if (btnRemove !== null) {
         btnRemove.addEventListener('click', () => {
           let con = confirm('삭제 하시곘습니까?');
@@ -111,6 +111,7 @@
         })
       }
 
+      // 글 좋아요
       if (btnLike !== null) {
         btnLike.addEventListener('click', () => {
           let con = confirm('글 추천을 누르시겠습니까?');
@@ -139,13 +140,14 @@
         })
       }
 
-
-      // 코멘트 관련 작업 위의 이벤트 리스너인 add도 이동 시킬것 --- 지금 이벤트 동작 evt target 아니라 안먹힘 ㅜㅜ
+      // 코멘트
       commentWrap.addEventListener('click', function (evt) {
         let evtTarget = evt.target,
-          commentBox = evtTarget.closest('.comment');
+          commentBox = evtTarget.closest('.comment'),
+          evtTargetClassListArr = [...evtTarget.classList];
 
-        if (evtTarget.className === 'btn-comment-answer') {
+        // 코멘트 등록
+        if (evtTargetClassListArr.includes('btn-comment-answer')) {
           let divEle = document.createElement('div');
 
           console.log([...commentBox.querySelectorAll('.comment-recomment')].length);
@@ -177,7 +179,8 @@
           }
         }
 
-        if (evtTarget.className === 'btn-comment-edit') {
+        // 코멘트 수정시 수정버튼
+        if (evtTargetClassListArr.includes('btn-comment-edit')) {
           let commentRoute = '{{ route('comments.edit', ['comment' => ':idx']) }}',
             commentIdx = commentBox.dataset.commentIdx;
 
@@ -198,11 +201,11 @@
               }
 
               commentBox.querySelector('.comment-content .content').innerHTML = `<textarea name="comment_content" id="" cols="30" rows="10">${data.comment_content}</textarea>`;
-              commentBox.querySelector('.btn-wrap').innerHTML = `<button type="button" class="btn-comment-update">등록</button> <button type="button" class="btn-comment-cancel">취소</button>`;
+              commentBox.querySelector('.list-util-wrap').innerHTML = `<button type="button" class="btn btn-link btn-comment-update">등록</button> <button type="button" class="btn btn-link btn-comment-cancel">취소</button>`;
 
               commentBox.querySelector('.btn-comment-cancel').addEventListener('click', () => {
                 commentBox.querySelector('.comment-content .content').innerHTML = `${data.comment_content}`;
-                commentBox.querySelector('.btn-wrap').innerHTML = `<button type="button" class="btn-comment-edit">수정</button> <button type="button" class="btn-comment-remove">삭제</button>`;
+                commentBox.querySelector('.list-util-wrap').innerHTML = `<button type="button" class="btn btn-link btn-comment-edit">수정</button> <button type="button" class="btn btn-link btn-comment-remove">삭제</button>`;
               });
             })
             .catch((error) => {
@@ -210,7 +213,8 @@
             });
         }
 
-        if (evtTarget.className === 'btn-comment-update') {
+        // 코멘트 수정 시 등록 버튼 - 업데이트
+        if (evtTargetClassListArr.includes('btn-comment-update')) {
           let commentRoute = '{{ route('comments.update', ['comment' => ':idx']) }}',
             commentIdx = commentBox.dataset.commentIdx,
             data = new FormData();
@@ -242,7 +246,8 @@
             });
         }
 
-        if (evtTarget.className === 'btn-comment-remove') {
+        // 코멘트 삭제
+        if (evtTargetClassListArr.includes('btn-comment-remove')) {
           let con = confirm('삭제하시겠습니까?');
 
           if (con) {
@@ -274,6 +279,7 @@
               });
           }
         }
+
         if (commentBox && commentBox.querySelector('textarea[name="comment_content"]') !== null) {
           commentBox.querySelector('textarea[name="comment_content"]').addEventListener('input', function () {
             this.innerHTML = this.value;
