@@ -17,7 +17,7 @@ class UploadController extends Controller
     $this->middleware('auth')->only('store');
   }
 
-  public function store(Request $request)
+  public function store(Request $request) : \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
   {
     DB::beginTransaction();
     try {
@@ -38,7 +38,7 @@ class UploadController extends Controller
         ]);
         DB::commit();
 
-        echo json_encode([
+        return response()->json([
           'fileName' => $fileName,
           'uploaded' => 1,
           'url' => $fileUrl,
@@ -48,7 +48,6 @@ class UploadController extends Controller
       DB::rollback();
       return redirect()->back()->withErrors(['error' => $e->getMessage()]);
     }
-
-    return false;
+    return redirect()->back()->withErrors(['error' => 'no file']);
   }
 }

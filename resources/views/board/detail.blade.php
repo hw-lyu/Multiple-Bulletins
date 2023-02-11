@@ -288,32 +288,33 @@
       });
 
       //코멘트 처리
-      function commentGetList(evtTarget = document.querySelector('.comment-btn-wrap .btn.disabled'), idx = {{ $idx }}, offset = document.querySelector('.comment-btn-wrap .btn.disabled').dataset.offset) {
-        let route = '{{ route('comments.list', ['idx' => ':idx', 'offset' => ':offset']) }}';
+      if(commentBtnWrap !== null) {
+        function commentGetList(evtTarget = document.querySelector('.comment-btn-wrap .btn.disabled'), idx = {{ $idx }}, offset = document.querySelector('.comment-btn-wrap .btn.disabled').dataset.offset) {
+          let route = '{{ route('comments.list', ['idx' => ':idx', 'offset' => ':offset']) }}';
 
-        route = route.replace(':idx', idx);
-        route = route.replace(':offset', offset);
+          route = route.replace(':idx', idx);
+          route = route.replace(':offset', offset);
 
-        fetch(route, {
-          method: 'POST',
-          headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-          }
-        })
-          .then((response) => {
-            return response.json();
-          })
-          .then((data) => {
-            if (data.error) {
-              return alert(data.error);
+          fetch(route, {
+            method: 'POST',
+            headers: {
+              'X-CSRF-TOKEN': '{{ csrf_token() }}'
             }
+          })
+            .then((response) => {
+              return response.json();
+            })
+            .then((data) => {
+              if (data.error) {
+                return alert(data.error);
+              }
 
-            let htmlTags = '',
-              creEle = document.createElement('div'),
-              dataLen = data.length - 1;
-            data.forEach((ele, idx) => {
-              htmlTags +=
-                `
+              let htmlTags = '',
+                creEle = document.createElement('div'),
+                dataLen = data.length - 1;
+              data.forEach((ele, idx) => {
+                htmlTags +=
+                  `
                   <div
                   class="comment${ele.idx !== ele.parent_idx ? ' reply' : ''}${ele.comment_state === 'y' && {{ $grade }} === 2 ? ' text-bg-danger' : ''}"
                   data-comment-idx="${ele.idx}">
@@ -323,60 +324,61 @@
                     </div>
                   `;
 
-              if (ele.comment_state === 'y' && {{ $grade }} === 2) {
-                htmlTags += `<div class="content">${ele.comment_content}</div>`;
-              } else if (ele.comment_state === 'n') {
-                htmlTags += `<div class="content">${ele.comment_content}</div>`;
-              } else {
-                htmlTags += `<div class="contnet">삭제된 코멘트 입니다.</div>`;
-              }
-              htmlTags += `</div>`;
-
-              if (ele.comment_state === 'n') {
-                @auth
-                  htmlTags += `<div class="list-util-wrap mt-1">`;
-                if (ele.comment_writer === '{{ Illuminate\Support\Facades\Auth::user()['email'] }}') {
-                  htmlTags += `<button type="button" class="btn btn-link btn-comment-edit">수정</button>
-                  <button type="button" class="btn btn-link btn-comment-remove">삭제</button>`;
+                if (ele.comment_state === 'y' && {{ $grade }} === 2) {
+                  htmlTags += `<div class="content">${ele.comment_content}</div>`;
+                } else if (ele.comment_state === 'n') {
+                  htmlTags += `<div class="content">${ele.comment_content}</div>`;
                 } else {
-                  htmlTags += `<button type="button" class="btn btn-link btn-comment-answer">답변하기</button>`;
+                  htmlTags += `<div class="contnet">삭제된 코멘트 입니다.</div>`;
                 }
                 htmlTags += `</div>`;
-                @endauth
+
+                if (ele.comment_state === 'n') {
+                  @auth
+                    htmlTags += `<div class="list-util-wrap mt-1">`;
+                  if (ele.comment_writer === '{{ Illuminate\Support\Facades\Auth::user()['email'] }}') {
+                    htmlTags += `<button type="button" class="btn btn-link btn-comment-edit">수정</button>
+                  <button type="button" class="btn btn-link btn-comment-remove">삭제</button>`;
+                  } else {
+                    htmlTags += `<button type="button" class="btn btn-link btn-comment-answer">답변하기</button>`;
+                  }
+                  htmlTags += `</div>`;
+                  @endauth
+                }
+
+                if (dataLen !== idx) {
+                  htmlTags += `</div> <hr style="border-top:1px solid #6c757d;">`;
+                }
+              });
+
+              if (evtTarget.nextElementSibling?.className === 'comment-box') {
+                evtTarget.nextElementSibling.remove();
+                return false;
               }
 
-              if (dataLen !== idx) {
-                htmlTags += `</div> <hr style="border-top:1px solid #6c757d;">`;
-              }
+              evtTarget.after(creEle);
+              creEle.classList.add('comment-box');
+
+              evtTarget.nextElementSibling.innerHTML = `${htmlTags}`;
+            })
+            .catch((error) => {
+              console.error('Error:', error);
             });
-
-            if (evtTarget.nextElementSibling?.className === 'comment-box') {
-              evtTarget.nextElementSibling.remove();
-              return false;
-            }
-
-            evtTarget.after(creEle);
-            creEle.classList.add('comment-box');
-
-            evtTarget.nextElementSibling.innerHTML = `${htmlTags}`;
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-          });
-      }
-
-      commentBtnWrap.addEventListener('click', function (evt) {
-        let evtTarget = evt.target,
-          datasetOffset = evtTarget.dataset.offset;
-
-        if (datasetOffset !== undefined) {
-          commentGetList(evtTarget, {{ $idx }}, datasetOffset);
         }
-      });
 
-      window.addEventListener('DOMContentLoaded', function () {
-        commentGetList();
-      });
+        commentBtnWrap.addEventListener('click', function (evt) {
+          let evtTarget = evt.target,
+            datasetOffset = evtTarget.dataset.offset;
+
+          if (datasetOffset !== undefined) {
+            commentGetList(evtTarget, {{ $idx }}, datasetOffset);
+          }
+        });
+
+        window.addEventListener('DOMContentLoaded', function () {
+          commentGetList();
+        });
+      }
     </script>
   @endpush
 
