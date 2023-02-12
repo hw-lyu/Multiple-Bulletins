@@ -7,9 +7,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-use App\Models\Comment;
 use Illuminate\Support\Facades\DB;
 use App\Traits\CommentPaginate;
+
+use App\Models\Board;
+use App\Models\Comment;
 
 class CommentController extends Controller
 {
@@ -49,6 +51,13 @@ class CommentController extends Controller
       Comment::where('idx', $comment['idx'])
         ->update(['parent_idx' => $comment['idx']]);
     }
+
+    // 코멘트 등록에 따른 게시판 코멘트 총 갯수 업데이트
+    $commentCount = Comment::where('board_idx', $comment['board_idx'])
+      ->count();
+
+    Board::find($comment['board_idx'])
+      ->update(['all_comment' => $commentCount]);
 
     return redirect()->route('boards.show', ['board' => $validated['board_idx']]);
   }

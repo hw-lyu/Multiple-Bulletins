@@ -42,7 +42,7 @@
           <div class="info">
             <div class="views">조회{{ $boardDetail['views'] }}회</div>
             <div class="view-like">추천수<span class="num">{{ $boardDetail['view_like'] }}</span>번</div>
-            <div class="comment">댓글{{ $boardDetail['comment_num'] }}건</div>
+            <div class="all-comment">댓글{{ $boardDetail['all_comment'] }}건</div>
           </div>
         </div>
       </div>
@@ -280,6 +280,7 @@
           }
         }
 
+        // 코멘트 컨텐츠 입력시 내용 출력
         if (commentBox && commentBox.querySelector('textarea[name="comment_content"]') !== null) {
           commentBox.querySelector('textarea[name="comment_content"]').addEventListener('input', function () {
             this.innerHTML = this.value;

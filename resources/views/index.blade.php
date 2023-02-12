@@ -38,6 +38,7 @@
               <td class="title">
                 <div class="title-box">
                   <a href="{{ route('boards.show', ['board' => $data['idx']]) }}">{{ $data['board_title'] }}</a>
+                  <div class="all-comment">[{{ $data['all_comment'] }}]</div>
                   {!! $data['photo_state'] === 'y' ? '<div class="file"><span class="visually-hidden">파일</span><i class="bi bi-images"></i>
 </span>' : '' !!}
                 </div>
@@ -45,7 +46,7 @@
               <td>{{ $data['user_email'] }}</td>
               <td>{{ $data['view_created_at'] }}</td>
               <td>{{ $data['views'] }}</td>
-              <td  class={{ $data['view_like'] !== 0 ? "view-like" : '' }}>{{ $data['view_like'] }}</td>
+              <td class={{ $data['view_like'] !== 0 ? "view-like" : '' }}>{{ $data['view_like'] }}</td>
             </tr>
           @endforeach
         @else
