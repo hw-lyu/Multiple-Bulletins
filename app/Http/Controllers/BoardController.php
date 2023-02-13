@@ -31,7 +31,7 @@ class BoardController extends Controller
   {
     $validated = $request->validate([
       'board_title' => 'required|max:255',
-      'board_cate' => 'required',
+      'board_cate' => 'required|in:카테1,카테2,카테3',
       'photo_state' => 'required',
       'board_content' => 'required',
       'board_content_delete_img' => 'array'
@@ -101,8 +101,6 @@ class BoardController extends Controller
 
     return view('board.detail', ['idx' => $idx, 'boardDetail' => $boardDetail, 'commentData' => $commentData, 'boardDetailAuth' => $boardDetailAuth, 'boardUpdatedDateState' => $boardUpdatedDateState, 'boardUrl' => $boardUrl, 'grade' => $grade]);
   }
-
-
 
   public function edit(int $idx)
   {
