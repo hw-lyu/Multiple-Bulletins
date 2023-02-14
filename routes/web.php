@@ -81,11 +81,6 @@ Route::post('/email/verification-notification', function (Request $request) {
 //정보 찾기 (아이디, 비밀번호 찾기) -- 아직 미완
 Route::get('/auth/find-information', [FindInformationController::class, 'index'])->name('auth.find');
 
-
-Route::middleware(['auth'])->group(function () {
-
-});
-
 // --- (완성) 비로그인시 - 글쓰기, 파일업로드 --- auth 미들웨어 추가 -> 라우터 내에 초깃값으로 미들웨어 only 추가
 // --- (완성) 뷰 템플릿 조각화(o), 글리스트 (o), 글수정 (p) , 글삭제(게시글에 board_state 추가) 페이지 추가 (o),
 // --- (완성) 일반 유저에겐 안보이게 할것(등급 추가 해야할듯) / 운영자는 보이게 변경
