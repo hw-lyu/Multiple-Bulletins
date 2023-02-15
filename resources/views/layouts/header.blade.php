@@ -22,7 +22,7 @@
             </div>
             <div class="user-space text-end">
               <a href="{{ route('join') }}" class="link">회원가입</a>
-              <a href="{{ route('auth.find') }}" class="link">정보찾기</a>
+              <a href="{{ route('password.request') }}" class="link">정보찾기</a>
               <input type="checkbox" id="rememberMe" name="remember_me" value="1">
               <label for="rememberMe">자동로그인</label>
             </div>

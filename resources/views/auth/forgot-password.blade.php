@@ -4,7 +4,8 @@
   <section class="auth-find-wrap inner">
     <h3 class="title">정보찾기</h3>
     <hr>
-    <form action="" method="post">
+    <form action="{{ route('password.email') }}" method="post">
+      @csrf
       <div class="find-pw">
         <p class="info">
           회원 가입시 등록하신 이메일 주소를 입력해주세요.<br>
