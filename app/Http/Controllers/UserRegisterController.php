@@ -18,7 +18,7 @@ class UserRegisterController extends Controller
     $validated = $request->validate([
       'name' => 'required|string|max:255',
       'email' => 'required|email|max:255|unique:users|ends_with:@naver.com,@gmail.com',
-      'password' => 'required',
+      'password' => 'required|confirmed',
       'terms_check' => 'required|boolean'
     ]);
 

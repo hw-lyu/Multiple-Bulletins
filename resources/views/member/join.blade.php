@@ -9,13 +9,17 @@
              value="{{ old('name') }}">
     </div>
     <div class="mb-3">
-      <label for="exampleFormControlInput1" class="visually-hidden">Email address</label>
+      <label for="exampleFormControlInput1" class="visually-hidden">이메일 주소</label>
       <input type="email" class="form-control" id="exampleFormControlInput1" name="email" placeholder="name@example.com"
              value="{{ old('email') }}">
     </div>
+    <div class="mb-3">
+      <label for="inputPassword" class="visually-hidden">패스워드</label>
+      <input type="password" class="form-control" id="inputPassword" name="password" placeholder="password">
+    </div>
     <div>
-      <label for="inputPassword2" class="visually-hidden">Password</label>
-      <input type="password" class="form-control" id="inputPassword2" name="password" placeholder="password">
+      <label for="inputPassword1" class="visually-hidden">패스워드 확인</label>
+      <input type="password" class="form-control" id="inputPassword1" name="password_confirmation" placeholder="password confirmed">
     </div>
     <div class="form-check mt-1">
       <input class="form-check-input" type="checkbox" id="termsCheck" name="terms_check" value="1">
