@@ -15,16 +15,19 @@
           @endauth
           @guest
             <div class="guest-login mb-1">
-              <label><input type="text" class="form-control" name="email" placeholder="아이디 입력" autocomplete="email"></label>
+              <label><input type="text" class="form-control" name="email" placeholder="아이디 입력"
+                            autocomplete="email"></label>
               <label><input type="password" class="form-control" name="password" placeholder="비밀번호 입력"
                             autocomplete="current-password"></label>
               <button type="submit" class="btn btn-link">로그인</button>
             </div>
-            <div class="user-space text-end">
-              <a href="{{ route('join') }}" class="link">회원가입</a>
-              <a href="{{ route('password.request') }}" class="link">정보찾기</a>
-              <input type="checkbox" id="rememberMe" name="remember_me" value="1">
-              <label for="rememberMe">자동로그인</label>
+            <div class="user-space d-flex align-items-center justify-content-end">
+              <a href="{{ route('join') }}" class="link me-2">회원가입</a>
+              <a href="{{ route('password.request') }}" class="link me-2">정보찾기</a>
+              <div class="d-flex align-items-center">
+                <input type="checkbox" id="rememberMe" class="me-1" name="remember_me" value="1">
+                <label for="rememberMe">자동로그인</label>
+              </div>
             </div>
           @endguest
         </div>
