@@ -14,10 +14,10 @@
             </div>
           @endauth
           @guest
-            <div class="guest-login mb-1">
-              <label><input type="text" class="form-control" name="email" placeholder="아이디 입력"
+            <div class="guest-login d-flex mb-1">
+              <label class="me-2"><input type="text" class="form-control" name="email" placeholder="아이디 입력"
                             autocomplete="email"></label>
-              <label><input type="password" class="form-control" name="password" placeholder="비밀번호 입력"
+              <label class="me-1"><input type="password" class="form-control" name="password" placeholder="비밀번호 입력"
                             autocomplete="current-password"></label>
               <button type="submit" class="btn btn-link">로그인</button>
             </div>
