@@ -70,13 +70,11 @@ Route::get('/email/verify', function (Request $request) {
 
   return view('auth.verify-email', ['userEmailVerifiedState' => $userEmailVerifiedState]);
 })->middleware('auth')->name('verification.notice');
-
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
   $request->fulfill();
 
   return redirect('/');
 })->middleware(['auth', 'signed'])->name('verification.verify');
-
 Route::post('/email/verification-notification', function (Request $request) {
   $request->user()->sendEmailVerificationNotification();
 
@@ -98,14 +96,12 @@ Route::post('/forgot-password', function (Request $request) {
     ? back()->with(['status' => __($status)])
     : back()->withErrors(['email' => __($status)]);
 })->middleware('guest')->name('password.email');
-
 Route::get('/reset-password/{token}', function ($token, Request $request) {
 
   $email = $request->query('email');
 
   return view('auth.reset-password', ['token' => $token, 'email' => $email]);
 })->middleware('guest')->name('password.reset');
-
 Route::post('/reset-password', function (Request $request) {
   $request->validate([
     'token' => 'required',
@@ -157,7 +153,7 @@ Route::post('/reset-password', function (Request $request) {
 // ㄴ 일반 유저에겐 삭제된 게시물 접근 금지 미들웨어 생성
 // ㄴ 글 삭제시 이미지 데이터도 디비에서 삭제하기(?)
 // 3. 코멘트 작업
-// 4. 정보찾기 작업
+// 4. 정보찾기 작업 (o)
 // 5. 인증메일 재발송 처리 -- 비회원일때 인증메일 처리 안됨 / 인증메일 처리완료시 인증메일 재발송 안보이게 하기
 // 6. 다중게시판 / 관리자 페이지 작업
 

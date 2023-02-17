@@ -33,24 +33,11 @@ class CommentController extends Controller
 
     $user = Auth::user()['email'];
 
-    // 코멘트 등록시 자기 코멘트에는 덧글 못달게 하기
-    if (!empty($validated['parent_idx'])) {
-      $parentDate = Comment::where('idx', $validated['parent_idx'])->first();
-      if ($user === $parentDate['comment_writer']) return redirect()->back()->withErrors(['error' => '내 댓글에는 댓글을 달 수 없습니다.']);
-    }
-
     $comment = Comment::create([
       'board_idx' => $validated['board_idx'],
       'comment_writer' => $user,
       'comment_content' => $validated['comment_content'],
-      'parent_idx' => $validated['parent_idx'] ?? null
     ]);
-
-    // 부모 idx가 없는 경우 자기 idx 업데이트
-    if ($comment['parent_idx'] === null) {
-      Comment::where('idx', $comment['idx'])
-        ->update(['parent_idx' => $comment['idx']]);
-    }
 
     // 코멘트 등록에 따른 게시판 코멘트 총 갯수 업데이트
     $commentCount = Comment::where('board_idx', $comment['board_idx'])
@@ -68,7 +55,7 @@ class CommentController extends Controller
     $user = Auth::user()['email'];
 
     if ($comment['comment_writer'] !== $user) {
-      return redirect()->back()->withErrors(['error' => '잘못된 접근 경로 입니다.']);
+      return response()->json(['error' => '잘못된 접근 경로 입니다.']);
     }
 
     return response()->json([
@@ -82,9 +69,8 @@ class CommentController extends Controller
     $comment = Comment::find($idx);
     $commentContent = $request->input()['comment_content'];
 
-    //에러코드 다시 생성해서 보내줘야할듯...!!
     if ($comment['comment_writer'] !== $user) {
-      return redirect()->back()->withErrors(['error' => '잘못된 접근 경로 입니다.']);
+      return response()->json(['error' => '잘못된 접근 경로 입니다.']);
     }
 
     Comment::where('idx', $comment['idx'])
@@ -103,13 +89,13 @@ class CommentController extends Controller
 
     if ($commentData['comment_writer'] !== $userEmail) {
       return response()->json([
-        'message' => '비정상적인 접근입니다.'
+        'error' => '비정상적인 접근입니다.'
       ]);
     }
 
     if ($commentData['comment_state'] === 'y') {
       return response()->json([
-        'message' => '이미 삭제된 덧글입니다.'
+        'error' => '이미 삭제된 덧글입니다.'
       ]);
     }
 

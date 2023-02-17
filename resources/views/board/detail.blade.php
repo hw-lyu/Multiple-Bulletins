@@ -150,17 +150,10 @@
         if (evtTargetClassListArr.includes('btn-comment-answer')) {
           let divEle = document.createElement('div');
 
-          console.log([...commentBox.querySelectorAll('.comment-recomment')].length);
-
-          if ([...commentBox.querySelectorAll('.comment-recomment')].length) {
-            return false;
-          }
-
           divEle.className = 'comment-recomment';
           divEle.innerHTML = `
     <form action="{{ route('comments.store') }}" method="post">
       <input type="hidden" name="_token" value={{ csrf_token() }}>
-      <input type="hidden" name="parent_idx" value="${commentBox.dataset.commentIdx}">
       <input type="hidden" name="board_idx" value="{{ $idx }}">
       <input type="hidden" name="board_url" value="{{ $boardUrl }}">
       <textarea name="comment_content" id="" cols="30" rows="10"></textarea>
@@ -232,14 +225,15 @@
             body: data
           })
             .then((response) => {
-              return response.json();
+              return response.text();
             })
             .then((data) => {
               if (data.error) {
                 return alert(data.error);
               }
+
               commentBox.querySelector('.content').innerHTML = `${data.comment_content}`;
-              commentBox.querySelector('.btn-wrap').innerHTML = `<button type="button" class="btn-comment-edit">수정</button> <button type="button" class="btn-comment-remove">삭제</button>`;
+              commentBox.querySelector('.list-util-wrap').innerHTML = `<button type="button" class="btn btn-link btn-comment-edit">수정</button> <button type="button" class="btn btn-link btn-comment-remove">삭제</button>`;
             })
             .catch((error) => {
               console.error('Error:', error);
@@ -248,36 +242,36 @@
 
         // 코멘트 삭제
         if (evtTargetClassListArr.includes('btn-comment-remove')) {
-          let con = confirm('삭제하시겠습니까?');
+          let route = '{{ route('comments.destroy', ['comment' => ':comment']) }}';
 
-          if (con) {
-            let route = '{{ route('comments.destroy', ['comment' => ':comment']) }}';
+          route = route.replace(':comment', commentBox.dataset.commentIdx);
 
-            route = route.replace(':comment', commentBox.dataset.commentIdx);
-
-            fetch(route, {
-              method: 'DELETE',
-              headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-              },
+          fetch(route, {
+            method: 'DELETE',
+            headers: {
+              'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+          })
+            .then((response) => {
+              return response.json();
             })
-              .then((response) => {
-                return response.json();
-              })
-              .then((data) => {
-                if (data.error) {
-                  return alert(data.error);
-                }
+            .then((data) => {
+              if (data.error) {
+                return alert(data.error);
+              }
 
+              let con = confirm('삭제하시겠습니까?');
+
+              if (con) {
                 alert(data.message);
                 commentBox.querySelector('.content').innerText = "삭제된 코멘트 입니다.";
-                commentBox.querySelector('.btn-wrap').remove();
+                commentBox.querySelector('.list-util-wrap').remove();
                 commentBox.querySelector('.info').innerText += ` (삭제일${data.comment_deleted_at})`;
-              })
-              .catch((error) => {
-                console.error('Error:', error);
-              });
-          }
+              }
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+            });
         }
 
         // 코멘트 컨텐츠 입력시 내용 출력
@@ -289,7 +283,7 @@
       });
 
       //코멘트 처리
-      if(commentBtnWrap !== null) {
+      if (commentBtnWrap !== null) {
         function commentGetList(evtTarget = document.querySelector('.comment-btn-wrap .btn.disabled'), idx = {{ $idx }}, offset = document.querySelector('.comment-btn-wrap .btn.disabled').dataset.offset) {
           let route = '{{ route('comments.list', ['idx' => ':idx', 'offset' => ':offset']) }}';
 
@@ -317,7 +311,7 @@
                 htmlTags +=
                   `
                   <div
-                  class="comment${ele.idx !== ele.parent_idx ? ' reply' : ''}${ele.comment_state === 'y' && {{ $grade }} === 2 ? ' text-bg-danger' : ''}"
+                  class="comment${ele.comment_state === 'y' && {{ $grade }} === 2 ? ' text-bg-danger' : ''}"
                   data-comment-idx="${ele.idx}">
                     <div class="comment-content">
                       <div class="info">
@@ -337,11 +331,10 @@
                 if (ele.comment_state === 'n') {
                   @auth
                     htmlTags += `<div class="list-util-wrap mt-1">`;
-                  if (ele.comment_writer === '{{ Illuminate\Support\Facades\Auth::user()['email'] }}') {
-                    htmlTags += `<button type="button" class="btn btn-link btn-comment-edit">수정</button>
+                  htmlTags += `<button type="button" class="btn btn-link btn-comment-edit">수정</button>
                   <button type="button" class="btn btn-link btn-comment-remove">삭제</button>`;
-                  } else {
-                    htmlTags += `<button type="button" class="btn btn-link btn-comment-answer">답변하기</button>`;
+                  if (ele.comment_writer === '{{ Illuminate\Support\Facades\Auth::user()['email'] }}') {
+                    // 0217 : 글쓴이 코멘트 수정 비교 후 넣기
                   }
                   htmlTags += `</div>`;
                   @endauth

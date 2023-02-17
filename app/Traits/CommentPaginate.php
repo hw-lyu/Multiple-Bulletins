@@ -27,7 +27,6 @@ trait CommentPaginate
       ->where('board_idx', $idx);
 
     $data = $comment
-        ->orderBy('parent_idx', 'asc')
         ->orderBy('idx', 'asc')
         ->offset($offset)
         ->limit($limit)
