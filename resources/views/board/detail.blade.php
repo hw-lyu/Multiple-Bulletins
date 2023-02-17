@@ -315,7 +315,7 @@
                   data-comment-idx="${ele.idx}">
                     <div class="comment-content">
                       <div class="info">
-                        ${ele.comment_writer}(작성일 ${ele.comment_created_at})${ele.comment_deleted_at !== null ? "(삭제일" + ele.comment_deleted_at + ")" : ''}
+                        ${ele.comment_writer}(작성일 ${ele.comment_created_at})${ele.comment_deleted_at !== null ? "(삭제일 " + ele.comment_deleted_at + ")" : ''}
                     </div>
                   `;
 
