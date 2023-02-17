@@ -225,14 +225,14 @@
             body: data
           })
             .then((response) => {
-              return response.text();
+              return response.json();
             })
             .then((data) => {
               if (data.error) {
                 return alert(data.error);
               }
 
-              commentBox.querySelector('.content').innerHTML = `${data.comment_content}`;
+              commentBox.querySelector('.comment-content .content').innerHTML = `${data.comment_content}`;
               commentBox.querySelector('.list-util-wrap').innerHTML = `<button type="button" class="btn btn-link btn-comment-edit">수정</button> <button type="button" class="btn btn-link btn-comment-remove">삭제</button>`;
             })
             .catch((error) => {
@@ -264,9 +264,9 @@
 
               if (con) {
                 alert(data.message);
-                commentBox.querySelector('.content').innerText = "삭제된 코멘트 입니다.";
+                commentBox.querySelector('.comment-content .content').innerText = "삭제된 코멘트 입니다.";
                 commentBox.querySelector('.list-util-wrap').remove();
-                commentBox.querySelector('.info').innerText += ` (삭제일${data.comment_deleted_at})`;
+                commentBox.querySelector('.info').innerText += ` (삭제일 ${data.comment_deleted_at})`;
               }
             })
             .catch((error) => {
@@ -330,13 +330,12 @@
 
                 if (ele.comment_state === 'n') {
                   @auth
-                    htmlTags += `<div class="list-util-wrap mt-1">`;
-                  htmlTags += `<button type="button" class="btn btn-link btn-comment-edit">수정</button>
-                  <button type="button" class="btn btn-link btn-comment-remove">삭제</button>`;
                   if (ele.comment_writer === '{{ Illuminate\Support\Facades\Auth::user()['email'] }}') {
-                    // 0217 : 글쓴이 코멘트 수정 비교 후 넣기
+                    htmlTags += `<div class="list-util-wrap mt-1">`;
+                    htmlTags += `<button type="button" class="btn btn-link btn-comment-edit">수정</button>
+                    <button type="button" class="btn btn-link btn-comment-remove">삭제</button>`;
+                    htmlTags += `</div>`;
                   }
-                  htmlTags += `</div>`;
                   @endauth
                 }
 
