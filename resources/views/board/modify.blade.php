@@ -7,12 +7,14 @@
       <a href="{{ route('home') }}" class="link">리스트</a>
     </div>
     @if(!empty($boardDetail))
-      <form action="{{ route('boards.update', ['board' => $idx]) }}" method="post" class="form-board-write" onsubmit="return false;">
+      <form action="{{ route('boards.update', ['board' => $idx]) }}" method="post" class="form-board-write"
+            onsubmit="return false;">
         @csrf
         @method('patch')
         <input type="hidden" name="photo_state" value="{{ $boardDetail['photo_state'] }}">
         <div class="head">
-          <input type="text" class="form-control board-title mb-1" name="board_title" placeholder="글제목" value="{{ $boardDetail['board_title'] }}">
+          <input type="text" class="form-control board-title mb-1" name="board_title" placeholder="글제목"
+                 value="{{ $boardDetail['board_title'] }}">
           <select class="form-select board-cate" aria-label="Default select" name="board_cate">
             <option value="분류" {{ $boardDetail['board_cate'] === '분류' ? 'selected' : ''  }}>분류</option>
             <option value="카테1" {{ $boardDetail['board_cate'] === '카테1' ? 'selected' : ''  }}>카테1</option>
@@ -34,9 +36,6 @@
   @push('scripts')
     <script src="{{ asset('lib/ckeditor.js') }}"></script>
     <script>
-      let imgSrcRequestArr = [];
-      let imgSrcDeleteArr = [];
-
       class MyUploadAdapter {
         constructor(loader) {
           // The file loader instance to use during the upload.
@@ -92,9 +91,6 @@
             if (!response || response.error) {
               return reject(response && response.error ? response.error.message : genericErrorText);
             }
-
-            //배열 매칭해서 이미지 소스 비교하기 위해 추가
-            imgSrcRequestArr.push(response.url);
 
             // If the upload is successful, resolve the upload promise with an object containing
             // at least the "default" URL, pointing to the image on the server.
@@ -155,8 +151,6 @@
         imageRemoveEvent: {
           additionalElementTypes: null,
           callback: (imagesSrc, nodeObjects) => {
-
-            imgSrcDeleteArr.push(imagesSrc[0]);
             document.querySelector('.form-board-write').insertAdjacentHTML('afterbegin', `<input type="hidden" name="board_content_delete_img[]" value="${imagesSrc[0]}">`)
           }
         }
@@ -167,14 +161,13 @@
 
       //버튼 클릭시 photoState를 위한 비교값 추가
       document.querySelector('.btn-add').addEventListener('click', function () {
-        const RequestArrLen = [...new Set(imgSrcRequestArr)].length;
-        const DeleteArrLen = [...new Set(imgSrcDeleteArr)].length;
+        const FigureImgArrLen = [...document.querySelectorAll('figure.image img[src*="http"]')].length;
 
         let photoState = document.querySelector('input[name="photo_state"]');
 
-        if (RequestArrLen === DeleteArrLen) {
+        if (!FigureImgArrLen) {
           photoState.value = 'N';
-        } else if (DeleteArrLen < RequestArrLen) {
+        } else {
           photoState.value = 'Y';
         }
 
