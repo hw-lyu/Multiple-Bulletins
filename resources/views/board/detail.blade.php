@@ -17,10 +17,11 @@
             @csrf
             <a href="{{ route('boards.edit', ['board' => $idx]) }}" class="link">수정</a>
             <button type="button" class="btn btn-link btn-remove">삭제</button>
+          @else
+            @auth
+              <button type="button" class="btn btn-link btn-like">좋아요</button>
+            @endauth
           @endif
-          @auth
-            <button type="button" class="btn btn-link btn-like">좋아요</button>
-          @endauth
         </div>
         <hr>
         <div class="title-box">
