@@ -38,7 +38,7 @@
               <td class="title">
                 <div class="title-box">
                   <a href="{{ route('boards.show', ['board' => $data['idx']]) }}">{{ $data['board_title'] }}</a>
-                  <div class="all-comment">[{{ $data['all_comment'] }}]</div>
+                  <a href="{{ route('boards.show', ['board' => $data['idx'], 'comment_view' => 1]) }}" class="all-comment">[{{ $data['all_comment'] }}]</a>
                   {!! $data['photo_state'] === 'y' ? '<div class="file"><span class="visually-hidden">파일</span><i class="bi bi-images"></i>
 </span>' : '' !!}
                 </div>

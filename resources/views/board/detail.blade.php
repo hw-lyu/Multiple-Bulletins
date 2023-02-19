@@ -48,9 +48,12 @@
         </div>
       </div>
       <hr>
-      <div class="content board-content mt-5 mb-5">
+      <div class="content board-content mt-5 mb-5{{ !empty($commentView) ? ' d-none' : '' }}">
         {!! $boardDetail['board_content'] !!}
       </div>
+      @if(!empty($commentView))
+        <button type="button" class="btn btn-primary d-block w-100 btn-comment-view">본문내용 보이기</button>
+      @endif
     @else
       <div class="info">해당 글을 찾을 수 없습니다.</div>
     @endif
@@ -88,7 +91,8 @@
       let btnRemove = document.querySelector('.head .btn-remove'),
         btnLike = document.querySelector('.head .btn-like'),
         commentWrap = document.querySelector('.comment-wrap'),
-        commentBtnWrap = document.querySelector('.comment-btn-wrap');
+        commentBtnWrap = document.querySelector('.comment-btn-wrap'),
+        commentViewBtn = document.querySelector('.btn-comment-view');
 
       // 글 삭제
       if (btnRemove !== null) {
@@ -283,7 +287,7 @@
         }
       });
 
-      //코멘트 처리
+      // 코멘트 처리
       if (commentBtnWrap !== null) {
         function commentGetList(evtTarget = document.querySelector('.comment-btn-wrap .btn.disabled'), idx = {{ $idx }}, offset = document.querySelector('.comment-btn-wrap .btn.disabled').dataset.offset) {
           let route = '{{ route('comments.list', ['idx' => ':idx', 'offset' => ':offset']) }}';
@@ -371,6 +375,14 @@
 
         window.addEventListener('DOMContentLoaded', function () {
           commentGetList();
+        });
+      }
+
+      // 코멘트 클릭시 - 본문 내용 보이기
+      if (commentViewBtn !== null) {
+        commentViewBtn.addEventListener('click', function () {
+          this.closest('.board-detail-wrap').querySelector('.content').classList.remove('d-none');
+          this.classList.add('d-none');
         });
       }
     </script>

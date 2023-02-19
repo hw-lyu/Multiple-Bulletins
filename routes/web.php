@@ -157,6 +157,7 @@ Route::post('/reset-password', function (Request $request) {
 // 5. 인증메일 재발송 처리 -- 비회원일때 인증메일 처리 안됨 / 인증메일 처리완료시 인증메일 재발송 안보이게 하기
 // 6. 다중게시판 / 관리자 페이지 작업
 // 7. 글 디테일 글쓰기 및 글수정 시 - 다른 호스트 주소의 이미지 붙여넣기 및 파일 첨부 했을 때 템플릿 이미지 아이콘 처리 on/off 방식 스크립트 수정 (o)
+// 8. 코멘트 클릭시 - 글 디테일 안보이고 코멘트만 보이게 처리 (o)
 
 Route::resources([
   'boards' => BoardController::class,

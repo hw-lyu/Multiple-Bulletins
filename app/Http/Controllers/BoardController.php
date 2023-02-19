@@ -95,11 +95,12 @@ class BoardController extends Controller
     //게시판 볼 때 마다 조회수 증가 --- 조회수 중복체크 미정
     Board::withoutTimestamps(fn() => $boardDetail->increment('views', 1));
 
-    $boardUrl = $request->url();
+    $boardUrl = $request->fullUrl();
+    $commentView = $request->query('comment_view');
     $boardDetailAuth = (Auth::user()['email'] ?? null) === $boardDetail['user_email'] ? 1 : 0;
     $boardUpdatedDateState = !!abs(strtotime($boardDetail['view_created_at']) - strtotime($boardDetail['view_updated_at']));
 
-    return view('board.detail', ['idx' => $idx, 'boardDetail' => $boardDetail, 'commentData' => $commentData, 'boardDetailAuth' => $boardDetailAuth, 'boardUpdatedDateState' => $boardUpdatedDateState, 'boardUrl' => $boardUrl, 'grade' => $grade]);
+    return view('board.detail', ['idx' => $idx, 'boardDetail' => $boardDetail, 'commentData' => $commentData, 'boardDetailAuth' => $boardDetailAuth, 'boardUpdatedDateState' => $boardUpdatedDateState, 'boardUrl' => $boardUrl, 'grade' => $grade, 'commentView' => $commentView]);
   }
 
   public function edit(int $idx)
