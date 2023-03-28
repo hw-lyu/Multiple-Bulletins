@@ -86,6 +86,7 @@
       @endauth
     </div>
   </div>
+
   @push('scripts')
     <script>
       let btnRemove = document.querySelector('.head .btn-remove'),
@@ -155,12 +156,19 @@
         if (evtTargetClassListArr.includes('btn-comment-answer')) {
           let divEle = document.createElement('div');
 
+          if (commentBox.querySelectorAll('.comment-recomment').length) {
+            return;
+          }
+
           divEle.className = 'comment-recomment';
           divEle.innerHTML = `
     <form action="{{ route('comments.store') }}" method="post">
       <input type="hidden" name="_token" value={{ csrf_token() }}>
       <input type="hidden" name="board_idx" value="{{ $idx }}">
       <input type="hidden" name="board_url" value="{{ $boardUrl }}">
+      <input type="hidden" name="comment_idx" value="${commentBox.dataset.commentIdx}">
+      <input type="hidden" name="group_idx" value="${commentBox.dataset.groupIdx}">
+      <input type="hidden" name="group_order" value="${commentBox.dataset.groupOrder}">
       <textarea name="comment_content" id="" cols="30" rows="10"></textarea>
       <button type="submit" class="btn btn-link btn-comment-add">등록</button>
       <button type="button" class="btn btn-link btn-comment-close">닫기</button>
@@ -317,7 +325,7 @@
                   `
                   <div
                   class="comment${ele.comment_state === 'y' && {{ $grade }} === 2 ? ' text-bg-danger' : ''}"
-                  data-comment-idx="${ele.idx}">
+                  data-comment-idx="${ele.idx}" data-group-idx="${ele.group_idx}" data-group-order="${ele.group_order}" style="${ele.group_order ? 'padding-left: ' + ele.group_order + '%' : ''}">
                     <div class="comment-content">
                       <div class="info">
                         ${ele.comment_writer}(작성일 ${ele.comment_created_at})${ele.comment_deleted_at !== null ? "(삭제일 " + ele.comment_deleted_at + ")" : ''}
@@ -339,6 +347,10 @@
                     htmlTags += `<div class="list-util-wrap mt-1">`;
                     htmlTags += `<button type="button" class="btn btn-link btn-comment-edit">수정</button>
                     <button type="button" class="btn btn-link btn-comment-remove">삭제</button>`;
+                    htmlTags += `</div>`;
+                  } else {
+                    htmlTags += `<div class="list-util-wrap mt-1">`;
+                    htmlTags += `<button type="button" class="btn btn-link btn-comment-answer">답글</button>`
                     htmlTags += `</div>`;
                   }
                   @endauth
