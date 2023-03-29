@@ -28,6 +28,7 @@ trait CommentPaginate
 
     $data = $comment
         ->orderBy('group_idx', 'asc')
+        ->orderBy('depth_idx', 'asc')
         ->orderBy('group_order', 'asc')
         ->offset($offset)
         ->limit($limit)

@@ -12,7 +12,7 @@ class Comment extends Model
   protected $table = 'comment';
   protected $primaryKey = 'idx';
 
-  protected $fillable = ['board_idx', 'comment_writer', 'comment_content', 'comment_state', 'parent_idx',' group_idx', 'group_order'];
+  protected $fillable = ['board_idx', 'comment_writer', 'comment_content', 'comment_state', 'depth_idx',' group_idx', 'group_order'];
 
   const CREATED_AT = 'comment_created_at';
   const UPDATED_AT = 'comment_updated_at';

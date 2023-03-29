@@ -23,8 +23,11 @@ class CommentController extends Controller
       'board_url' => 'required',
       'board_idx' => 'required',
       'comment_content' => 'required',
-      'parent_idx' => 'int'
+      'comment_idx' => 'int',
+      'group_idx' => 'int',
+      'group_order' => 'int'
     ]);
+
     $referer = $request->headers->get('referer');
 
     if ($validated['board_url'] !== $referer) {
@@ -39,12 +42,38 @@ class CommentController extends Controller
       'comment_content' => $validated['comment_content'],
     ]);
 
-    // 코멘트 등록에 따른 게시판 코멘트 총 갯수 업데이트
-    $commentCount = Comment::where('board_idx', $comment['board_idx'])
-      ->count();
+    // 내 코멘트 등록따른 업데이트 처리
+    $myComment = Comment::where('board_idx', $comment['board_idx']);
 
+    // 코멘트 총 갯수 업데이트
     Board::find($comment['board_idx'])
-      ->update(['all_comment' => $commentCount]);
+      ->update([
+        'all_comment' => $myComment->count()
+      ]);
+
+    // 코멘트에 parent_idx가 없으면 추가
+    $myCommentArr = $myComment->orderBy('idx', 'desc')->first();
+
+    // 댓글만 달때
+    if (empty($validated['comment_idx']) && empty($myCommentArr['parent_idx'])) {
+      $myComment->where('idx', $myCommentArr['idx'])
+        ->update([
+          'depth_idx' => $myCommentArr['idx'],
+          'group_idx' => $myCommentArr['idx']
+        ]);
+    }
+
+    // 대댓글 달때
+    if (!empty($validated['comment_idx'])) {
+      $parentArr = $myComment->where('idx', $validated['comment_idx'])->first();
+
+      $myCommentArr->where('idx', $myCommentArr['idx'])
+        ->update([
+          'depth_idx' => $parentArr['depth_idx'] . '-' . $myCommentArr['idx'],
+          'group_idx' => $validated['group_idx'],
+          'group_order' => ($validated['group_order'] + 1)
+        ]);
+    }
 
     return redirect()->route('boards.show', ['board' => $validated['board_idx']]);
   }
