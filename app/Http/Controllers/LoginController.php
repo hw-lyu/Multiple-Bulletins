@@ -5,10 +5,17 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Services\UserService;
 
 class LoginController extends Controller
 {
+
+  protected $userService;
+
+  public function __construct(UserService $userService)
+  {
+    $this->userService = $userService;
+  }
 
   public function index()
   {
@@ -17,22 +24,9 @@ class LoginController extends Controller
 
   public function authenticate(Request $request)
   {
-    //초깃값
-    $remeberMe = $request->boolean('remember_me');
+    $data = $request->input();
 
-    $credentials = $request->validate([
-      'email' => 'required|email',
-      'password' => 'required',
-    ]);
-
-    if (Auth::attempt( ['email' => $credentials['email'], 'password' => $credentials['password']], $remeberMe )) {
-      $request->session()->regenerate();
-
-      return redirect()->intended('/');
-    }
-
-    return back()->withErrors([
-      'email' => '제공된 자격 증명이 기록과 일치하지 않습니다.',
-    ]);
+    return $this->userService->login(request: $request, data: $data);
   }
+
 }
