@@ -10,7 +10,7 @@
             <div class="info text-center mb-1">{{ Illuminate\Support\Facades\Auth::user()['name'] }}님! 반갑습니다.</div>
             <div class="account">
               <button type="submit" class="btn btn-link">로그아웃</button>
-              <a href="{{ route('verification.notice') }}" class="link">인증메일 재발송</a>
+              <a href="{{ route('verification.notice') }}" class="btn btn-link">인증메일 재발송</a>
             </div>
           @endauth
           @guest
