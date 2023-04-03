@@ -7,10 +7,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\UserService;
 
+
 class LoginController extends Controller
 {
 
-  protected $userService;
+  protected UserService $userService;
 
   public function __construct(UserService $userService)
   {

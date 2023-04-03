@@ -10,7 +10,7 @@ use App\Services\UserService;
 class LogoutController extends Controller
 {
 
-  protected $userService;
+  protected UserService $userService;
 
   public function __construct(UserService $userService)
   {

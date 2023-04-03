@@ -8,7 +8,7 @@ use App\Models\User;
 class UserRepository implements UserRepositoryInterface
 {
 
-  protected $user;
+  protected User $user;
 
   public function __construct(User $user)
   {
@@ -16,7 +16,7 @@ class UserRepository implements UserRepositoryInterface
   }
 
   public function create(array $data = [])
-  {
+  {;
     return $this->user->create($data);
   }
 

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 class UserRegisterController extends Controller
 {
 
-  protected $userService;
+  protected UserService $userService;
 
   public function __construct(UserService $userService)
   {
