@@ -39,7 +39,7 @@ class BoardController extends Controller
       }
 
     } catch (Exception $e) {
-      return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+      return back()->withErrors(['error' => $e->getMessage()]);
     }
 
     return redirect()->route('boards.show', ['board' => $result['board']]);
@@ -54,7 +54,7 @@ class BoardController extends Controller
         throw new Exception($result['error']);
       }
     } catch (Exception $e) {
-      return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+      return back()->withErrors(['error' => $e->getMessage()]);
     }
 
     return view('board.detail', $result);
@@ -69,7 +69,7 @@ class BoardController extends Controller
         throw new Exception($result['error']);
       }
     } catch (Exception $e) {
-      return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+      return back()->withErrors(['error' => $e->getMessage()]);
     }
 
     return view('board.modify', ['idx' => $idx, 'boardDetail' => $result['boardDetail']]);
@@ -83,7 +83,7 @@ class BoardController extends Controller
       $result = $this->boardService->updatePost(idx: $idx, request: $request, data: $data);
 
     } catch (Exception $e) {
-      return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+      return back()->withErrors(['error' => $e->getMessage()]);
     }
 
     return redirect()->route('boards.show', ['board' => $result['board']]);
@@ -95,7 +95,7 @@ class BoardController extends Controller
       $result = $this->boardService->destroyPost($idx);
 
     } catch (Exception $e) {
-      return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+      return back()->withErrors(['error' => $e->getMessage()]);
     }
 
     return $result;
@@ -107,7 +107,7 @@ class BoardController extends Controller
       $result = $this->boardService->likePost(idx: $idx);
 
     } catch (Exception $e) {
-      return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+      return back()->withErrors(['error' => $e->getMessage()]);
     }
 
     return $result;

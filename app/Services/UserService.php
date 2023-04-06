@@ -36,26 +36,26 @@ class UserService
     Auth::login(user: $user);
     event(new Registered(user: $user));
 
-    return redirect()->route('home');
+    return $data;
   }
 
   public function login(Request $request, array $data)
   {
     $remeberMe = $request->boolean('remember_me');
-    $credentials = Validator::make($data, [
+    $validator = Validator::make($data, [
       'email' => 'required|email',
       'password' => 'required',
     ])->validate();
 
-    if (Auth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']], $remeberMe)) {
+    if (Auth::attempt(['email' => $validator['email'], 'password' => $validator['password']], $remeberMe)) {
       $request->session()->regenerate();
 
       return redirect()->intended('/');
     }
 
-    return back()->withErrors([
+    return [
       'email' => '제공된 자격 증명이 기록과 일치하지 않습니다.',
-    ]);
+    ];
   }
 
   public function logout(Request $request)
@@ -64,8 +64,6 @@ class UserService
 
     $request->session()->invalidate();
     $request->session()->regenerateToken();
-
-    return redirect('/');
   }
 
 }

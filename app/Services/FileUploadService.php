@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
+use Exception;
+
 class FileUploadService
 {
   protected FileUploadRepository $fileUploadRepository;
@@ -38,7 +40,7 @@ class FileUploadService
           ...$createData
         ];
 
-        $this->fileUploadRepository->create(data : $fileInfoData);
+        $this->fileUploadRepository->create(data: $fileInfoData);
 
         DB::commit();
 
@@ -48,14 +50,14 @@ class FileUploadService
           'url' => $fileUrl
         ]);
       }
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
       DB::rollback();
 
       Log::info($e->getMessage());
-      return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+      return ['error' => $e->getMessage()];
     }
 
-    return redirect()->back()->withErrors(['error' => 'no file']);
+    return ['error' => 'no file'];
   }
 
 }

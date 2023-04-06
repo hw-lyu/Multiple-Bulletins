@@ -19,7 +19,9 @@ class LogoutController extends Controller
 
   public function logout(Request $request)
   {
-    return $this->userService->logout(request: $request);
+    $this->userService->logout(request: $request);
+
+    return redirect('/');
   }
 
 }

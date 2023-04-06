@@ -77,16 +77,18 @@
           xhr.addEventListener('error', () => reject(genericErrorText));
           xhr.addEventListener('abort', () => reject());
           xhr.addEventListener('load', () => {
-            const response = xhr.response;
-
+            const response = xhr.response,
+              responseErr = response.error;
             // This example assumes the XHR server's "response" object will come with
             // an "error" which has its own "message" that can be passed to reject()
             // in the upload promise.
             //
             // Your integration may handle upload errors in a different way so make sure
             // it is done properly. The reject() function must be called when the upload fails.
-            if (!response || response.error) {
-              return reject(response && response.error ? response.error.message : genericErrorText);
+
+            if (!response || responseErr) {
+              if (responseErr) alert(`${genericErrorText}\n${responseErr}`);
+              return reject(response && responseErr ? responseErr.message : genericErrorText);
             }
 
             // If the upload is successful, resolve the upload promise with an object containing

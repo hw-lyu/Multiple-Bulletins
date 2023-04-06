@@ -27,7 +27,9 @@ class UserRegisterController extends Controller
       'password' => Hash::make($request->password),
     ];
 
-    return $this->userService->register(data: $data, createData: $createData);
+    $this->userService->register(data: $data, createData: $createData);
+
+    return redirect()->route('home');
   }
 
 }

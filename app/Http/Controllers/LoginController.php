@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\UserService;
 
+use Exception;
 
 class LoginController extends Controller
 {
@@ -27,7 +28,17 @@ class LoginController extends Controller
   {
     $data = $request->input();
 
-    return $this->userService->login(request: $request, data: $data);
+    try {
+      $result = $this->userService->login(request: $request, data: $data);
+
+      if (gettype($result) === 'array' && !empty($result['email'])) {
+        throw new Exception($result['email']);
+      }
+    } catch (Exception $e) {
+      return back()->withErrors(['error' => $e->getMessage()]);
+    }
+
+    return $result;
   }
 
 }
