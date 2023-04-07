@@ -26,6 +26,12 @@ class BoardRepository implements BoardRepositoryInterface
       ->update($data);
   }
 
+  public function findUpdate(int $idx, array $data = [])
+  {
+    return $this->board->find($idx)
+      ->update($data);
+  }
+
   public function getByIdx(int $idx)
   {
     return $this->board->find($idx);
