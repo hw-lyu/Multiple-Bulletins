@@ -28,11 +28,17 @@ class CommentController extends Controller
 
     try {
       $result = $this->commentService->store(request: $request, data: $data);
+      $error = gettype($result) === 'object' ? json_decode($result->content(), true)['error'] : [];
+
+      if(!empty($error)) {
+        throw new Exception($error);
+      }
+
     } catch (Exception $e) {
       return back()->withErrors(['error' => $e->getMessage()]);
     }
 
-    return $result;
+    return redirect()->route('boards.show', ['board' => $result['board_idx']]);
   }
 
   public function edit(int $idx)

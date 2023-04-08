@@ -33,10 +33,12 @@ class CommentService
     ])->validate();
 
     $referer = $request->headers->get('referer');
+    $route = route('boards.show', ['board' => $validator['board_idx']]);
     $user = Auth::user()['email'];
 
-    if ($validator['board_url'] !== $referer) {
-      return redirect()->back()->withErrors(['error' => '잘못된 접근 경로 입니다.']);
+    // 전체 주소 및 board idx로 이전 referer와 비교하여 잘못된 경로 접근형식일 시 에러 반환
+    if ($validator['board_url'] !== $referer || $referer !== $route) {
+      return response()->json(['error' => '잘못된 접근 경로 입니다.']);
     }
 
     $comment = $this->commentRepository->create(data: [
@@ -75,7 +77,7 @@ class CommentService
       ]);
     }
 
-    return redirect()->route('boards.show', ['board' => $validator['board_idx']]);
+    return $validator;
   }
 
   public function edit(int $idx)
