@@ -2,24 +2,18 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
-
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Http\Request;
 
 use App\Http\Controllers\UserRegisterController;
 
 use App\Http\Controllers\JoinController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
-use App\Http\Controllers\FindInformationController;
 
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\EmailController;
+use App\Http\Controllers\PasswordController;
 
 use App\Models\Board;
 
@@ -63,69 +57,15 @@ Route::get('/join', [JoinController::class, 'index'])->name('join');
 Route::post('/register', [UserRegisterController::class, 'userRegister'])->name('register');
 
 //이메일 인증 관련
-Route::get('/email/verify', function (Request $request) {
-
-  //초깃값
-  $userEmailVerifiedState = empty($request->user()->email_verified_at);
-
-  return view('auth.verify-email', ['userEmailVerifiedState' => $userEmailVerifiedState]);
-})->middleware('auth')->name('verification.notice');
-Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-  $request->fulfill();
-
-  return redirect('/');
-})->middleware(['auth', 'signed'])->name('verification.verify');
-Route::post('/email/verification-notification', function (Request $request) {
-  $request->user()->sendEmailVerificationNotification();
-
-  return back()->with('message', '확인 링크를 보냈습니다!<br>이메일을 확인해주세요!');
-})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+Route::get('/email/verify', [EmailController::class, 'notice'])->middleware('auth')->name('verification.notice');
+Route::get('/email/verify/{id}/{hash}', [EmailController::class, 'verify'])->middleware(['auth', 'signed'])->name('verification.verify');
+Route::post('/email/verification-notification', [EmailController::class, 'send'])->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 // 정보찾기 - 비밀번호 찾기
-Route::get('/forgot-password', function () {
-  return view('auth.forgot-password');
-})->middleware('guest')->name('password.request');
-Route::post('/forgot-password', function (Request $request) {
-  $request->validate(['email' => 'required|email']);
-
-  $status = Password::sendResetLink(
-    $request->only('email')
-  );
-
-  return $status === Password::RESET_LINK_SENT
-    ? back()->with(['status' => __($status)])
-    : back()->withErrors(['email' => __($status)]);
-})->middleware('guest')->name('password.email');
-Route::get('/reset-password/{token}', function ($token, Request $request) {
-
-  $email = $request->query('email');
-
-  return view('auth.reset-password', ['token' => $token, 'email' => $email]);
-})->middleware('guest')->name('password.reset');
-Route::post('/reset-password', function (Request $request) {
-  $request->validate([
-    'token' => 'required',
-    'email' => 'required|email',
-    'password' => 'required|min:8|confirmed',
-  ]);
-
-  $status = Password::reset(
-    $request->only('email', 'password', 'password_confirmation', 'token'),
-    function ($user, $password) {
-      $user->forceFill([
-        'password' => Hash::make($password)
-      ])->setRememberToken(Str::random(60));
-
-      $user->save();
-
-      event(new PasswordReset($user));
-    }
-  );
-
-  return $status === Password::PASSWORD_RESET
-    ? redirect()->route('login')->with('status', __($status))
-    : back()->withErrors(['email' => [__($status)]]);
-})->middleware('guest')->name('password.update');
+Route::get('/forgot-password', [PasswordController::class, 'index'])->middleware('guest')->name('password.request');
+Route::post('/forgot-password', [PasswordController::class, 'emailSend'])->middleware('guest')->name('password.email');
+Route::get('/reset-password/{token}', [PasswordController::class, 'reset'])->middleware('guest')->name('password.reset');
+Route::post('/reset-password', [PasswordController::class, 'update'])->middleware('guest')->name('password.update');
 
 Route::resources([
   'boards' => BoardController::class,
