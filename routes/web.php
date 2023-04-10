@@ -78,4 +78,4 @@ Route::post('boards/like/{idx}', [BoardController::class, 'like'])->name('boards
 Route::post('comments/{idx}/{offset}', [CommentController::class, 'list'])->name('comments.list');
 
 // 어드민툴
-ROute::get('admin', [AdminController::class, 'index'])->middleware('auth');
+Route::get('admin', [AdminController::class, 'index'])->middleware('auth');
