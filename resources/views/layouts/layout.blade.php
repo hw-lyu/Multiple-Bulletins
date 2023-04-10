@@ -11,7 +11,6 @@
 <body>
 <div class="wrap">
   @include('layouts.header')
-
   <section class="main-container mt-5 mb-5">
     <h2 class="visually-hidden">메인 콘텐츠</h2>
     @yield('content')

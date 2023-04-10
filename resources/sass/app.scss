@@ -235,3 +235,21 @@ table {
 .title-box .all-comment {
   margin-left: 1.2%;
 }
+
+.admin-wrap {
+  margin: -3rem 0;
+
+  .left-side-bar {
+    height: calc(100vh - 112px);
+    background-color: var(--home-signature-color);
+    padding: 10px;
+  }
+
+  .list {
+    list-style: none;
+  }
+
+  .content {
+    padding: 10px;
+  }
+}

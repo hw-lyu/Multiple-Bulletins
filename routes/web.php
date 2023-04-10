@@ -9,6 +9,7 @@ use App\Http\Controllers\JoinController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\CommentController;
@@ -70,8 +71,11 @@ Route::post('/reset-password', [PasswordController::class, 'update'])->middlewar
 Route::resources([
   'boards' => BoardController::class,
   'upload' => UploadController::class,
-  'comments' => CommentController::class,
+  'comments' => CommentController::class
 ]);
 
 Route::post('boards/like/{idx}', [BoardController::class, 'like'])->name('boards.like');
 Route::post('comments/{idx}/{offset}', [CommentController::class, 'list'])->name('comments.list');
+
+// 어드민툴
+ROute::get('admin', [AdminController::class, 'index'])->middleware('auth');
