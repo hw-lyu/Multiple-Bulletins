@@ -45,18 +45,23 @@
     </ul>
   </div>
 @endif
+@if(session()->has('message'))
+  <div class="alert alert-success">
+    {{ session()->get('message') }}
+  </div>
+@endif
 
 <script>
   let rememberMeInput = document.getElementById('rememberMe');
 
   if (rememberMeInput !== null) {
     rememberMeInput.addEventListener('input', function () {
-        if (this.checked) {
-          let con = confirm('자동로그인을 사용하면 다음부터 아이디와 비밀번호를 입력하실 필요 없습니다.\n공공장소에서는 개인정보가 유출 될 수 있으니 사용을 자제해 주십시요.\n\n자동 로그인을 사용하시겠습니까?');
-          if (!con) {
-            this.checked = false;
-          }
+      if (this.checked) {
+        let con = confirm('자동로그인을 사용하면 다음부터 아이디와 비밀번호를 입력하실 필요 없습니다.\n공공장소에서는 개인정보가 유출 될 수 있으니 사용을 자제해 주십시요.\n\n자동 로그인을 사용하시겠습니까?');
+        if (!con) {
+          this.checked = false;
         }
-      });
+      }
+    });
   }
 </script>

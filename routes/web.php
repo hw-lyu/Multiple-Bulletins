@@ -79,3 +79,5 @@ Route::post('comments/{idx}/{offset}', [CommentController::class, 'list'])->name
 
 // 어드민툴
 Route::get('admin', [AdminController::class, 'index'])->middleware('auth');
+Route::get('admin/board', [AdminController::class, 'index'])->middleware('auth')->name('admin.board');
+Route::post('admin/board/store', [AdminController::class, 'store'])->middleware('auth')->name('admin.board.store');
