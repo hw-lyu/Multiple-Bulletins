@@ -33,7 +33,7 @@ class CommentService
     ])->validate();
 
     $referer = $request->headers->get('referer');
-    $route = route('boards.show', ['board' => $validator['board_idx']]);
+    $route = route('board.show', ['idx' => $validator['board_idx']]);
     $user = Auth::user()['email'];
 
     // 전체 주소 및 board idx로 이전 referer와 비교하여 잘못된 경로 접근형식일 시 에러 반환

@@ -15,7 +15,7 @@
           <div class="mb-3">
             <label for="boardUrl" class="form-label">게시판 주소</label>
             <input type="text" class="form-control" id="boardUrl" name="board_url"
-                   placeholder="/board/{userId}/{boardTableName}">
+                   placeholder="/board/{boardTableName}">
             <div class="info mt-1">
               - 게시판 주소는 영어 소문자와 숫자만 등록 가능합니다.<br>
               - 게시판 주소는 <strong>{boardTableName}</strong>에 해당합니다<br>

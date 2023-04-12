@@ -2,9 +2,15 @@
 @section('title', '메인')
 @section('content')
   <div class="inner">
+    <ul class="board-list">
+      @foreach($boardTableListData as $boardTableList)
+        <li><a href="{{ route('board.table', str_replace('_', '/', $boardTableList['table_name'])) }}"
+               class="link">{{ $boardTableList['table_board_title'] }}</a></li>
+      @endforeach
+    </ul>
     @if(!empty($auth))
       <div class="btn-wrap text-end mb-1">
-        <a href="{{ route('boards.create') }}" class="link">글쓰기</a>
+        <a href="{{ route('board.create', ['tableName' => $tableName]) }}" class="link">글쓰기</a>
       </div>
     @endif
     @if( !empty($listData) )
@@ -37,8 +43,11 @@
               <td>{{ $data['board_cate'] }}</td>
               <td class="title">
                 <div class="title-box">
-                  <a href="{{ route('boards.show', ['board' => $data['idx']]) }}">{{ $data['board_title'] }}</a>
-                  <a href="{{ route('boards.show', ['board' => $data['idx'], 'comment_view' => 1]) }}" class="all-comment">[{{ $data['all_comment'] }}]</a>
+                  <a
+                    href="{{ route('board.show', ['idx' => $data['idx'], 'tableName' => $tableName]) }}">{{ $data['board_title'] }}</a>
+                  <a
+                    href="{{ route('board.show', ['idx' => $data['idx'], 'tableName' => $tableName, 'comment_view' => 1]) }}"
+                    class="all-comment">[{{ $data['all_comment'] }}]</a>
                   {!! $data['photo_state'] === 'y' ? '<div class="file"><span class="visually-hidden">파일</span><i class="bi bi-images"></i>
 </span>' : '' !!}
                 </div>

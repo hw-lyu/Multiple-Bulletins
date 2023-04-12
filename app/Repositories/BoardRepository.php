@@ -11,6 +11,7 @@ class BoardRepository implements BoardRepositoryInterface
 
   public function __construct(Board $board)
   {
+    //$board = (new $board)->setTable('board');
     $this->board = $board;
   }
 

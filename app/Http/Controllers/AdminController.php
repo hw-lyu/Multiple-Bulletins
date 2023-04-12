@@ -15,11 +15,6 @@ use Exception;
 
 class AdminController extends Controller
 {
-  public function __construct()
-  {
-    $this->middleware('auth');
-  }
-
   public function index()
   {
     return view('admin.index');
@@ -30,14 +25,12 @@ class AdminController extends Controller
     $data = $request->input();
 
     $validator = Validator::make($data, [
-      'board_url' => 'required|regex:/[a-z0-9]/',
+      'board_url' => 'required|regex:/^[a-z0-9]+$/',
       'board_title' => 'required|max:255',
     ])->validate();
 
     $userEmail = Auth::user()['email'];
-    $userId = explode('@', $userEmail)[0];
-    $tableName = $userId . '_' . $validator['board_url'];
-
+    $tableName = $validator['board_url'];
     /*
     * CREATE TABLE 문과 트랜잭션 분리
     * CREATE TABLE 등은 암시적 커밋을 유발하는 문
@@ -60,7 +53,7 @@ class AdminController extends Controller
       return back()->withErrors(['error' => $e->getMessage()]);
     }
 
-    if (!Schema::hasTable('board_' . $tableName)) {
+    if (!Schema::hasTable($tableName)) {
       // board와 comment는 1짝씩 커플이므로 같이 생성된다.
       DB::statement('Create Table IF NOT EXISTS ' . 'board_' . $tableName . ' like board');
       DB::statement('Create Table IF NOT EXISTS ' . 'comment_' . $tableName . ' like comment');

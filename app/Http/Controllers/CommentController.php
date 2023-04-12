@@ -30,7 +30,7 @@ class CommentController extends Controller
       $result = $this->commentService->store(request: $request, data: $data);
       $error = gettype($result) === 'object' ? json_decode($result->content(), true)['error'] : [];
 
-      if(!empty($error)) {
+      if (!empty($error)) {
         throw new Exception($error);
       }
 
@@ -38,7 +38,7 @@ class CommentController extends Controller
       return back()->withErrors(['error' => $e->getMessage()]);
     }
 
-    return redirect()->route('boards.show', ['board' => $result['board_idx']]);
+    return redirect()->route('board.show', ['idx' => $result['board_idx']]);
   }
 
   public function edit(int $idx)
@@ -75,9 +75,9 @@ class CommentController extends Controller
   }
 
   // 페이징 리스트 - commentGetList
-  public function list(int $idx, int $offset)
+  public function list(string $tableName, int $idx, int $offset)
   {
-    $commentData = $this->commentGetList($idx, $offset);
+    $commentData = $this->commentGetList(tableName: $tableName === 'board' ? 'comment' : 'comment' . $tableName, boardIdx: $idx, offset: $offset);
 
     return $commentData['data'];
   }

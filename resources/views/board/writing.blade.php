@@ -6,7 +6,7 @@
     <div class="btn-wrap mb-3">
       <a href="{{ route('home') }}" class="link">리스트</a>
     </div>
-    <form action="{{ route('boards.store') }}" method="post" class="form-board-write" onsubmit="return false;">
+    <form action="{{ route('board.store') }}" method="post" class="form-board-write" onsubmit="return false;">
       @csrf
       <input type="hidden" name="photo_state" value="{{ old('photo_state') }}">
       <div class="head">

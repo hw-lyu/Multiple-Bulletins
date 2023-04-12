@@ -70,7 +70,7 @@ class BoardService
 
       DB::commit();
 
-      return ['status' => 200, 'board' => $board['idx']];
+      return ['status' => 200, 'boardIdx' => $board['idx']];
 
     } catch (Exception $e) {
       DB::rollback();
@@ -82,14 +82,14 @@ class BoardService
     }
   }
 
-  public function showPost(Request $request, int $idx)
+  public function showPost(Request $request, string $tableName, int $idx)
   {
     $boardDetail = $this->boardRepository->getByIdx($idx);
     $auth = Auth::user() ?? [];
     $grade = !empty($auth['grade']) ? $auth['grade'] : 0;
 
     // 페이징
-    $commentData = $this->commentGetList($idx);
+    $commentData = $this->commentGetList(tableName: $tableName === 'board' ? 'comment' : 'comment_' . $tableName, boardIdx: $idx);
 
     if ($boardDetail === null) {
       return ['error' => '해당 글이 없습니다.'];
@@ -161,7 +161,7 @@ class BoardService
 
       DB::commit();
 
-      return ['board' => $idx];
+      return ['boardIdx' => $idx];
 
     } catch (Exception $e) {
       DB::rollback();

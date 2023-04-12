@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Traits\CommentPaginate;
 
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class BoardController extends Controller
 {
@@ -22,19 +23,18 @@ class BoardController extends Controller
     $this->boardService = $boardService;
   }
 
-  public function create()
+  public function create(string $tableName)
   {
-    return view('board.writing');
+    return view('board.writing', ['tableName' => $tableName]);
   }
 
-  public function store(Request $request)
+  public function store(string $tableName, Request $request)
   {
     $data = $request->all();
-
     try {
       $result = $this->boardService->storePost(request: $request, data: $data);
 
-      if (empty($result['board'])) {
+      if (empty($result['boardIdx'])) {
         throw new Exception('게시물을 다시 작성해주세요.');
       }
 
@@ -42,13 +42,13 @@ class BoardController extends Controller
       return back()->withErrors(['error' => $e->getMessage()]);
     }
 
-    return redirect()->route('boards.show', ['board' => $result['board']]);
+    return redirect()->route('board.show', ['idx' => $result['boardIdx'], 'tableName' => $tableName]);
   }
 
-  public function show(int $idx, Request $request)
+  public function show(string $tableName, int $idx, Request $request)
   {
     try {
-      $result = $this->boardService->showPost(request: $request, idx: $idx);
+      $result = $this->boardService->showPost(request: $request, tableName: $tableName, idx: $idx);
 
       if (!empty($result['error'])) {
         throw new Exception($result['error']);
@@ -57,10 +57,10 @@ class BoardController extends Controller
       return back()->withErrors(['error' => $e->getMessage()]);
     }
 
-    return view('board.detail', $result);
+    return view('board.detail', $result, ['tableName' => $tableName]);
   }
 
-  public function edit(int $idx)
+  public function edit(string $tableName, int $idx)
   {
     try {
       $result = $this->boardService->editPost($idx);
@@ -72,10 +72,10 @@ class BoardController extends Controller
       return back()->withErrors(['error' => $e->getMessage()]);
     }
 
-    return view('board.modify', ['idx' => $idx, 'boardDetail' => $result['boardDetail']]);
+    return view('board.modify', ['idx' => $idx, 'boardDetail' => $result['boardDetail'], 'tableName' => $tableName]);
   }
 
-  public function update(int $idx, Request $request)
+  public function update(string $tableName, int $idx, Request $request)
   {
     $data = $request->all();
 
@@ -86,10 +86,10 @@ class BoardController extends Controller
       return back()->withErrors(['error' => $e->getMessage()]);
     }
 
-    return redirect()->route('boards.show', ['board' => $result['board']]);
+    return redirect()->route('board.show', ['idx' => $result['boardIdx'], 'tableName' => $tableName]);
   }
 
-  public function destroy(int $idx)
+  public function destroy(string $tableName, int $idx)
   {
     try {
       $result = $this->boardService->destroyPost($idx);
@@ -101,7 +101,7 @@ class BoardController extends Controller
     return $result;
   }
 
-  public function like(int $idx)
+  public function like(string $tableName, int $idx)
   {
     try {
       $result = $this->boardService->likePost(idx: $idx);
