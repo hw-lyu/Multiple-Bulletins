@@ -31,25 +31,7 @@ use App\Models\BoardTableList;
 */
 
 //메인
-Route::get('/', function () {
-  $auth = Auth::user();
-
-  $tableName = 'board';
-  $board = (new Board)->setTable('board');
-  $boardTableListData = BoardTableList::get();
-
-  // $auth['grade'] - 1: 일반회원, 2: 관리자
-  if (!empty($auth['grade']) && $auth['grade'] === 2) {
-    $listData = $board->orderBy('idx', 'desc')
-      ->paginate(3);
-  } else {
-    $listData = $board->where('board_state', 'n')
-      ->orderBy('idx', 'desc')
-      ->paginate(3);
-  }
-
-  return view('index', ['auth' => $auth, 'listData' => $listData, 'boardTableListData' => $boardTableListData, 'tableName' => $tableName]);
-})->name('home');
+Route::get('/', [BoardController::class, 'index'])->name('home');
 
 //로그인
 Route::get('/login', [LoginController::class, 'index'])->name('login');
@@ -78,7 +60,7 @@ Route::resources([
   'comments' => CommentController::class
 ]);
 
-//Route::get('/board', [BoardController::class, 'index'])->name('board.index');
+Route::get('/board/{tableName}', [BoardController::class, 'index'])->name('board.index');
 Route::get('/board/{tableName}/create', [BoardController::class, 'create'])->name('board.create');
 Route::post('/board/{tableName}', [BoardController::class, 'store'])->name('board.store');
 Route::get('/board/{tableName}/{idx}', [BoardController::class, 'show'])->name('board.show');
@@ -86,19 +68,14 @@ Route::get('/board/{tableName}/{idx}/edit', [BoardController::class, 'edit'])->n
 Route::patch('/board/{tableName}/{idx}', [BoardController::class, 'update'])->name('board.update');
 Route::delete('/board/{tableName}/{idx}', [BoardController::class, 'destroy'])->name('board.destroy');
 
-Route::get('board/{tableName?}', function (string $tableName = null) {
-  $boardTableListData = BoardTableList::get();
-  if (!empty($tableName)) {
-    $board = (new Board)->setTable($tableName);
-  }
-
-  return view('index', ['boardTableListData' => $boardTableListData]);
-})->name('board.table');
-
 Route::post('/board/like/{tableName}/{idx}', [BoardController::class, 'like'])->name('board.like');
 
 // 코멘트
 Route::post('/comments/{tableName}/{idx}/{offset}', [CommentController::class, 'list'])->name('comments.list');
+Route::post('/comments/{tableName}', [CommentController::class, 'store'])->name('comments.store');
+Route::get('/comments/{tableName}/{idx}/edit', [CommentController::class, 'edit'])->name('comments.edit');
+Route::patch('/comments/{tableName}/{idx}', [CommentController::class, 'update'])->name('comments.update');
+Route::delete('/comments/{tableName}/{idx}', [CommentController::class, 'destroy'])->name('comments.destroy');
 
 // 어드민툴
 Route::get('/admin', [AdminController::class, 'index'])->middleware('auth');

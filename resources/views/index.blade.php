@@ -4,7 +4,7 @@
   <div class="inner">
     <ul class="board-list">
       @foreach($boardTableListData as $boardTableList)
-        <li><a href="{{ route('board.table', str_replace('_', '/', $boardTableList['table_name'])) }}"
+        <li><a href="{{ route('board.index', str_replace('_', '/', $boardTableList['table_name'])) }}"
                class="link">{{ $boardTableList['table_board_title'] }}</a></li>
       @endforeach
     </ul>

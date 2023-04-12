@@ -7,6 +7,7 @@ use App\Traits\CommentPaginate;
 use App\Repositories\BoardRepository;
 use App\Repositories\BoardLikeRepository;
 use App\Repositories\FileUploadRepository;
+use App\Repositories\BoardTableListRepository;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,12 +24,14 @@ class BoardService
   protected BoardRepository $boardRepository;
   protected BoardLikeRepository $boardLikeRepository;
   protected FileUploadRepository $fileUploadRepository;
+  protected BoardTableListRepository $boardTableListRepository;
 
-  public function __construct(BoardRepository $boardRepository, BoardLikeRepository $boardLikeRepository, FileUploadRepository $fileUploadRepository)
+  public function __construct(BoardRepository $boardRepository, BoardLikeRepository $boardLikeRepository, FileUploadRepository $fileUploadRepository, BoardTableListRepository $boardTableListRepository)
   {
     $this->boardRepository = $boardRepository;
     $this->boardLikeRepository = $boardLikeRepository;
     $this->fileUploadRepository = $fileUploadRepository;
+    $this->boardTableListRepository = $boardTableListRepository;
   }
 
   public function storePost(Request $request, array $data = [])
@@ -89,7 +92,7 @@ class BoardService
     $grade = !empty($auth['grade']) ? $auth['grade'] : 0;
 
     // 페이징
-    $commentData = $this->commentGetList(tableName: $tableName === 'board' ? 'comment' : 'comment_' . $tableName, boardIdx: $idx);
+    $commentData = $this->commentGetList(tableName: 'comment_' . $tableName, boardIdx: $idx);
 
     if ($boardDetail === null) {
       return ['error' => '해당 글이 없습니다.'];
@@ -235,5 +238,20 @@ class BoardService
 
       return response()->json(['error' => $e->getMessage()], 500);
     }
+  }
+
+  public function getList(string $tableName)
+  {
+    $auth = Auth::user() ?? [];
+    $boardTableListData = $this->boardTableListRepository->getList();
+
+    // $auth['grade'] - 1: 일반회원, 2: 관리자
+    if (!empty($auth['grade']) && $auth['grade'] === 2) {
+      $listData = $this->boardRepository->getAllList(paginateNum: '3');
+    } else {
+      $listData = $this->boardRepository->getList(boardState: 'N', paginateNum: '3');
+    }
+
+    return ['auth' => $auth, 'listData' => $listData, 'boardTableListData' => $boardTableListData, 'tableName' => $tableName];
   }
 }

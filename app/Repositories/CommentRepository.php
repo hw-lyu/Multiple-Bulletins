@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Interfaces\CommentRepositoryInterface;
 use App\Models\Comment;
+use Illuminate\Support\Facades\Route;
 
 class CommentRepository implements CommentRepositoryInterface
 {
@@ -11,6 +12,9 @@ class CommentRepository implements CommentRepositoryInterface
 
   public function __construct(Comment $comment)
   {
+    $dynamicParameters = Route::current()->parameters()['tableName'] ?? null;
+    $dynamicTableName = empty($dynamicParameters) ? 'comment_basic' : 'comment_' . $dynamicParameters;
+    $comment = (new $comment)->setTable($dynamicTableName);
     $this->comment = $comment;
   }
 

@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Interfaces\BoardRepositoryInterface;
 use App\Models\Board;
+use Illuminate\Support\Facades\Route;
 
 class BoardRepository implements BoardRepositoryInterface
 {
@@ -11,7 +12,9 @@ class BoardRepository implements BoardRepositoryInterface
 
   public function __construct(Board $board)
   {
-    //$board = (new $board)->setTable('board');
+    $dynamicParameters = Route::current()->parameters()['tableName'] ?? null;
+    $dynamicTableName = empty($dynamicParameters) ? 'board_basic' : 'board_' . $dynamicParameters;
+    $board = (new $board)->setTable($dynamicTableName);
     $this->board = $board;
   }
 
@@ -41,6 +44,19 @@ class BoardRepository implements BoardRepositoryInterface
   public function incrementBoardViews(int $idx, object $query, string $key = 'views')
   {
     return $this->board->withoutTimestamps(fn() => ($query)->increment($key, 1));
+  }
+
+  public function getList(string $boardState = 'n', int $paginateNum = 3)
+  {
+    return $this->board->where('board_state', $boardState)
+      ->orderBy('idx', 'desc')
+      ->paginate($paginateNum);
+  }
+
+  public function getAllList(int $paginateNum = 3)
+  {
+    return $this->board->orderBy('idx', 'desc')
+      ->paginate($paginateNum);
   }
 
 }

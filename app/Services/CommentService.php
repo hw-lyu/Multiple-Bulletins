@@ -21,7 +21,7 @@ class CommentService
     $this->boardRepository = $boardRepository;
   }
 
-  public function store(Request $request, array $data = [])
+  public function store(Request $request, string $tableName, array $data = [])
   {
     $validator = Validator::make($data, [
       'board_url' => 'required',
@@ -29,11 +29,11 @@ class CommentService
       'comment_content' => 'required',
       'comment_idx' => 'int',
       'group_idx' => 'int',
-      'group_order' => 'int'
+      'group_order' => 'int',
     ])->validate();
 
     $referer = $request->headers->get('referer');
-    $route = route('board.show', ['idx' => $validator['board_idx']]);
+    $route = route('board.show', ['idx' => $validator['board_idx'], 'tableName' => $tableName]);
     $user = Auth::user()['email'];
 
     // 전체 주소 및 board idx로 이전 referer와 비교하여 잘못된 경로 접근형식일 시 에러 반환

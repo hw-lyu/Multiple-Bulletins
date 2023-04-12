@@ -7,7 +7,7 @@
       <a href="{{ route('home') }}" class="link">리스트</a>
     </div>
     @if(!empty($boardDetail))
-      <form action="{{ route('board.update', ['idx' => $idx]) }}" method="post" class="form-board-write"
+      <form action="{{ route('board.update', ['idx' => $idx, 'tableName' => $tableName]) }}" method="post" class="form-board-write"
             onsubmit="return false;">
         @csrf
         @method('patch')

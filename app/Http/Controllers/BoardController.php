@@ -23,6 +23,13 @@ class BoardController extends Controller
     $this->boardService = $boardService;
   }
 
+  public function index(string $tableName = 'basic')
+  {
+    $result = $this->boardService->getList($tableName);
+
+    return view('index', $result);
+  }
+
   public function create(string $tableName)
   {
     return view('board.writing', ['tableName' => $tableName]);
@@ -57,7 +64,7 @@ class BoardController extends Controller
       return back()->withErrors(['error' => $e->getMessage()]);
     }
 
-    return view('board.detail', $result, ['tableName' => $tableName]);
+    return view('board.detail', ['tableName' => $tableName, ...$result]);
   }
 
   public function edit(string $tableName, int $idx)
