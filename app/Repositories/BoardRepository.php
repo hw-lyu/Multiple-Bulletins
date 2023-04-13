@@ -4,18 +4,15 @@ namespace App\Repositories;
 
 use App\Interfaces\BoardRepositoryInterface;
 use App\Models\Board;
-use Illuminate\Support\Facades\Route;
 
 class BoardRepository implements BoardRepositoryInterface
 {
   protected Board $board;
 
-  public function __construct(Board $board)
+  public function __construct(Board $board, string $tableName = 'board_basic')
   {
-    $dynamicParameters = Route::current()->parameters()['tableName'] ?? null;
-    $dynamicTableName = empty($dynamicParameters) ? 'board_basic' : 'board_' . $dynamicParameters;
-    $board = (new $board)->setTable($dynamicTableName);
     $this->board = $board;
+    $this->board->setTable($tableName);
   }
 
   public function create(array $data = [])

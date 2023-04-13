@@ -10,12 +10,10 @@ class CommentRepository implements CommentRepositoryInterface
 {
   protected Comment $comment;
 
-  public function __construct(Comment $comment)
+  public function __construct(Comment $comment, string $tableName = 'comment_basic')
   {
-    $dynamicParameters = Route::current()->parameters()['tableName'] ?? null;
-    $dynamicTableName = empty($dynamicParameters) ? 'comment_basic' : 'comment_' . $dynamicParameters;
-    $comment = (new $comment)->setTable($dynamicTableName);
     $this->comment = $comment;
+    $this->comment->setTable($tableName);
   }
 
   public function create(array $data = [])

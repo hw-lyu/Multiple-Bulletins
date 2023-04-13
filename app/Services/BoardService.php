@@ -25,13 +25,19 @@ class BoardService
   protected BoardLikeRepository $boardLikeRepository;
   protected FileUploadRepository $fileUploadRepository;
   protected BoardTableListRepository $boardTableListRepository;
+  protected object $setBoard;
 
-  public function __construct(BoardRepository $boardRepository, BoardLikeRepository $boardLikeRepository, FileUploadRepository $fileUploadRepository, BoardTableListRepository $boardTableListRepository)
+  public function __construct(BoardRepository $boardRepository, BoardLikeRepository $boardLikeRepository, FileUploadRepository $fileUploadRepository, BoardTableListRepository $boardTableListRepository, Request $request)
   {
     $this->boardRepository = $boardRepository;
     $this->boardLikeRepository = $boardLikeRepository;
     $this->fileUploadRepository = $fileUploadRepository;
     $this->boardTableListRepository = $boardTableListRepository;
+
+    // 동적 테이블명을 위한 로직 - 서비스 컨테이너에서 클래스 인스턴스 의존성 해결 및 변수 전달을 위해 table name 재할당
+    $dynamicParameters = optional($request->route())->parameters()['tableName'] ?? null;
+    $dynamicTableName = empty($dynamicParameters) ? 'board_basic' : 'board_' . $dynamicParameters;
+    $this->boardRepository = app($this->boardRepository::class, ['tableName' => $dynamicTableName]);
   }
 
   public function storePost(Request $request, array $data = [])

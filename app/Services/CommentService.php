@@ -15,10 +15,16 @@ class CommentService
   protected CommentRepository $commentRepository;
   protected BoardRepository $boardRepository;
 
-  public function __construct(CommentRepository $commentRepository, BoardRepository $boardRepository)
+  public function __construct(CommentRepository $commentRepository, BoardRepository $boardRepository, Request $request)
   {
     $this->commentRepository = $commentRepository;
     $this->boardRepository = $boardRepository;
+
+    // 동적 테이블명을 위한 로직 - 서비스 컨테이너에서 클래스 인스턴스 의존성 해결 및 변수 전달을 위해 table name 재할당
+    $dynamicParameters = optional($request->route())->parameters()['tableName'] ?? null;
+    $dynamicTableName = empty($dynamicParameters) ? 'basic' : $dynamicParameters;
+    $this->commentRepository = app($this->commentRepository::class, ['tableName' => 'comment_' . $dynamicTableName]);
+    $this->boardRepository = app($this->boardRepository::class, ['tableName' => 'board_' . $dynamicTableName]);
   }
 
   public function store(Request $request, string $tableName, array $data = [])

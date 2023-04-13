@@ -11,6 +11,7 @@ class Board extends Model
 
   protected $table = 'board_basic';
   protected $primaryKey = 'idx';
+  
   protected $fillable = ['user_email', 'board_cate', 'board_title', 'views', 'view_like', 'board_content', 'photo_state', 'all_comment'];
 
   const CREATED_AT = 'view_created_at';
