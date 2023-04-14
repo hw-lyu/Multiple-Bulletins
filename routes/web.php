@@ -55,11 +55,7 @@ Route::post('/forgot-password', [PasswordController::class, 'emailSend'])->middl
 Route::get('/reset-password/{token}', [PasswordController::class, 'reset'])->middleware('guest')->name('password.reset');
 Route::post('/reset-password', [PasswordController::class, 'update'])->middleware('guest')->name('password.update');
 
-Route::resources([
-  'upload' => UploadController::class,
-  'comments' => CommentController::class
-]);
-
+// 게시판
 Route::get('/board/{tableName}', [BoardController::class, 'index'])->name('board.index');
 Route::get('/board/{tableName}/create', [BoardController::class, 'create'])->name('board.create');
 Route::post('/board/{tableName}', [BoardController::class, 'store'])->name('board.store');
@@ -76,6 +72,9 @@ Route::post('/comments/{tableName}', [CommentController::class, 'store'])->name(
 Route::get('/comments/{tableName}/{idx}/edit', [CommentController::class, 'edit'])->name('comments.edit');
 Route::patch('/comments/{tableName}/{idx}', [CommentController::class, 'update'])->name('comments.update');
 Route::delete('/comments/{tableName}/{idx}', [CommentController::class, 'destroy'])->name('comments.destroy');
+
+// 파일 업로드
+Route::post('/upload/{tableName}', [UploadController::class, 'store'])->name('upload.store');
 
 // 어드민툴
 Route::get('/admin', [AdminController::class, 'index'])->middleware('auth');

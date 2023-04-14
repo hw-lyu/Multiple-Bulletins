@@ -7,7 +7,8 @@
       <a href="{{ route('home') }}" class="link">리스트</a>
     </div>
     @if(!empty($boardDetail))
-      <form action="{{ route('board.update', ['idx' => $idx, 'tableName' => $tableName]) }}" method="post" class="form-board-write"
+      <form action="{{ route('board.update', ['idx' => $idx, 'tableName' => $tableName]) }}" method="post"
+            class="form-board-write"
             onsubmit="return false;">
         @csrf
         @method('patch')
@@ -67,7 +68,7 @@
           // integration to choose the right communication channel. This example uses
           // a POST request with JSON as a data structure but your configuration
           // could be different.
-          xhr.open('POST', '{{ route('upload.store').'?_token='.csrf_token() }}', true);
+          xhr.open('POST', '{{ route('upload.store', ['tableName' => $tableName]).'?_token='.csrf_token() }}', true);
           xhr.responseType = 'json';
         }
 
@@ -131,7 +132,6 @@
       }
 
       // ...
-
       function MyCustomUploadAdapterPlugin(editor) {
         editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
           // Configure the URL to the upload script in your back-end here!

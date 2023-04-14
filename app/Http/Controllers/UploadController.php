@@ -20,11 +20,12 @@ class UploadController extends Controller
     $this->fileUploadService = $fileUploadService;
   }
 
-  public function store(Request $request)
+  public function store(Request $request, string $tableName)
   {
     $data = $request->all();
     $createData = [
-      'user_email' => Auth::user()['email']
+      'user_email' => Auth::user()['email'],
+      'table_name' => $tableName
     ];
 
     try {
@@ -40,5 +41,4 @@ class UploadController extends Controller
 
     return $result;
   }
-
 }

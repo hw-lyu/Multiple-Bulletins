@@ -40,7 +40,7 @@ class BoardService
     $this->boardRepository = app($this->boardRepository::class, ['tableName' => $dynamicTableName]);
   }
 
-  public function storePost(Request $request, array $data = [])
+  public function storePost(string $tableName, Request $request, array $data = [])
   {
     $validator = Validator::make($data, [
       'board_title' => 'required|max:255',
@@ -65,7 +65,7 @@ class BoardService
           Storage::delete('storage/img/' . $str);
           Storage::disk('local')->delete('public/img/' . $str);
 
-          $this->fileUploadRepository->delete(userEmail: $userEmail, fileURL: $fileImg);
+          $this->fileUploadRepository->delete(whereData: ['table_name' => $tableName, 'user_email' => $userEmail, 'file_url' => $fileImg]);
         }
       }
 
@@ -131,7 +131,7 @@ class BoardService
     return ['idx' => $idx, 'boardDetail' => $boardDetail];
   }
 
-  public function updatePost(int $idx, Request $request, array $data = [])
+  public function updatePost(string $tableName, int $idx, Request $request, array $data = [])
   {
     $validator = Validator::make($data, [
       'board_title' => 'required|max:255',
@@ -143,7 +143,7 @@ class BoardService
 
     // 초깃값
     $userEmail = Auth::user()['email'];
-    $boardContentDeleteImg = $validated['board_content_delete_img'] ?? [];
+    $boardContentDeleteImg = $validator['board_content_delete_img'] ?? [];
 
     DB::beginTransaction();
     try {
@@ -155,7 +155,7 @@ class BoardService
           Storage::delete('storage/img/' . $str);
           Storage::disk('local')->delete('public/img/' . $str);
 
-          $this->fileUploadRepository->delete(userEmail: $userEmail, fileURL: $fileImg);
+          $this->fileUploadRepository->delete(whereData: ['table_name' => $tableName, 'user_email' => $userEmail, 'file_url' => $fileImg]);
         }
       }
 
@@ -207,7 +207,7 @@ class BoardService
     }
   }
 
-  public function likePost(int $idx)
+  public function likePost(string $tableName, int $idx)
   {
     //초깃값
     header('Content-Type', 'application/json');
@@ -221,8 +221,9 @@ class BoardService
     DB::beginTransaction();
     try {
       $this->boardLikeRepository->create(data: [
+        'table_name' => $tableName,
         'user_email' => $userEmail,
-        'board_idx' => $idx,
+        'board_idx' => $idx
       ]);
 
       //좋아요 추가

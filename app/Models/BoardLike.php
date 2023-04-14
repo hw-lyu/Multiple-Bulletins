@@ -12,7 +12,7 @@ class BoardLike extends Model
   protected $table = 'board_like';
   protected $primaryKey = 'idx';
 
-  protected $fillable = ['user_email', 'board_idx'];
+  protected $fillable = ['user_email', 'board_idx', 'table_name'];
 
   const CREATED_AT = 'created_at';
   const UPDATED_AT = null ;

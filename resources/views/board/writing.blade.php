@@ -6,7 +6,8 @@
     <div class="btn-wrap mb-3">
       <a href="{{ route('home') }}" class="link">리스트</a>
     </div>
-    <form action="{{ route('board.store', ['tableName' => $tableName]) }}" method="post" class="form-board-write" onsubmit="return false;">
+    <form action="{{ route('board.store', ['tableName' => $tableName]) }}" method="post" class="form-board-write"
+          onsubmit="return false;">
       @csrf
       <input type="hidden" name="photo_state" value="{{ old('photo_state') }}">
       <div class="head">
@@ -64,7 +65,7 @@
           // integration to choose the right communication channel. This example uses
           // a POST request with JSON as a data structure but your configuration
           // could be different.
-          xhr.open('POST', '{{ route('upload.store').'?_token='.csrf_token() }}', true);
+          xhr.open('POST', '{{ route('upload.store', ['tableName' => $tableName]).'?_token='.csrf_token() }}', true);
           xhr.responseType = 'json';
         }
 

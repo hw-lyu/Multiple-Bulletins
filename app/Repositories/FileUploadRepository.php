@@ -19,11 +19,10 @@ class FileUploadRepository implements FileUploadRepositoryInterface
     return $this->boardFiles->create($data);
   }
 
-  public function delete(string $userEmail, string $fileURL)
+  public function delete(array $whereData = ['col' => 'val1'])
   {
     return $this->boardFiles
-      ->where('user_email', $userEmail)
-      ->where('file_url', $fileURL)
+      ->where($whereData)
       ->delete();
   }
 

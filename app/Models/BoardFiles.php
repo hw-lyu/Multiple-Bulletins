@@ -10,5 +10,5 @@ class BoardFiles extends Model
   protected $primaryKey = 'idx';
   public $timestamps = false;
 
-  protected $fillable = ['user_email', 'file_name', 'file_url'];
+  protected $fillable = ['user_email', 'file_name', 'file_url', 'table_name'];
 }

@@ -6,7 +6,9 @@
     <div class="d-flex justify-content-between inner">
       <nav class="left-side-bar col-2">
         <ul class="list text-center mb-0 pl-0 ps-0">
-          <li><a href="{{ route('admin.board') }}">메뉴 추가하기</a></li>
+          <li><a href="{{ route('admin.board') }}">메뉴 추가</a></li>
+          <li><a href="{{ route('admin.board') }}">메뉴 수정</a></li>
+          <li><a href="{{ route('admin.board') }}">메뉴 삭제</a></li>
         </ul>
       </nav>
       <div class="content col-10">

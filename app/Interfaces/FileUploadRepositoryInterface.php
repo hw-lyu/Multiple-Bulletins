@@ -6,5 +6,5 @@ interface FileUploadRepositoryInterface
 {
   public function create(array $data = []);
 
-  public function delete(string $userEmail, string $fileURL);
+  public function delete(array $whereData = ['col' => 'val1']);
 }
