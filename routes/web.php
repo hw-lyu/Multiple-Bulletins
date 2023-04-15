@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UserRegisterController;
@@ -10,14 +9,12 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminBoardController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\PasswordController;
-
-use App\Models\Board;
-use App\Models\BoardTableList;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,6 +74,8 @@ Route::delete('/comments/{tableName}/{idx}', [CommentController::class, 'destroy
 Route::post('/upload/{tableName}', [UploadController::class, 'store'])->name('upload.store');
 
 // 어드민툴
-Route::get('/admin', [AdminController::class, 'index'])->middleware('auth');
-Route::get('/admin/board', [AdminController::class, 'index'])->middleware('auth')->name('admin.board');
-Route::post('/admin/board/store', [AdminController::class, 'store'])->middleware('auth')->name('admin.board.store');
+Route::get('/admin', [AdminController::class, 'index'])->middleware('auth')->name('admin');
+Route::get('/admin/board', [AdminBoardController::class, 'index'])->middleware('auth')->name('admin.board');
+Route::get('/admin/board/create', [AdminBoardController::class, 'create'])->middleware('auth')->name('admin.board.create');
+Route::post('/admin/board/store', [AdminBoardController::class, 'store'])->middleware('auth')->name('admin.board.store');
+Route::get('/admin/board/{boardIdx}/edit', [AdminBoardController::class, 'edit'])->middleware('auth')->name('admin.board.edit');
