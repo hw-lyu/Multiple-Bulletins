@@ -22,7 +22,7 @@
       </div>
     </div>
     <div class="row mb-3">
-      <label for="tableBoardTitle" class="col-sm-2 col-form-label">테이블 이름</label>
+      <label for="tableBoardTitle" class="col-sm-2 col-form-label">게시판 이름</label>
       <div class="col-sm-10">
         <input type="text" class="form-control" id="tableBoardTitle" name="table_board_title"
                value="{{ $listData['table_board_title'] }}">
