@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use App\Traits\CommentPaginate;
 
 use Exception;
-use Illuminate\Support\Facades\DB;
 
 class BoardController extends Controller
 {

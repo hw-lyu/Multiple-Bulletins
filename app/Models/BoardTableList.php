@@ -14,5 +14,5 @@ class BoardTableList extends Model
   protected $fillable = ['user_email', 'table_name', 'table_board_title', 'table_order'];
 
   const CREATED_AT = 'table_created_at';
-  const UPDATED_AT = null;
+  const UPDATED_AT = 'table_updated_at';
 }

@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 
+use App\Models\BoardLog;
 use App\Models\BoardTableList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
+
+use Exception;
 
 class AdminBoardController extends Controller
 {
@@ -47,10 +50,18 @@ class AdminBoardController extends Controller
     DB::beginTransaction();
 
     try {
-      BoardTableList::create([
+      $boardTabList = BoardTableList::create([
         'user_email' => $userEmail,
         'table_name' => $tableName,
         'table_board_title' => $validator['board_title']
+      ]);
+
+      BoardLog::create([
+        'board_idx' => $boardTabList['idx'],
+        'user_email' => $boardTabList['user_email'],
+        'table_name' => $boardTabList['table_name'],
+        'table_board_title' => $boardTabList['table_board_title'],
+        'table_created_at' => $boardTabList['table_created_at']
       ]);
 
       DB::commit();
@@ -59,10 +70,10 @@ class AdminBoardController extends Controller
       return back()->withErrors(['error' => $e->getMessage()]);
     }
 
-    if (!Schema::hasTable($tableName)) {
+    if (!Schema::hasTable('board_' . $tableName)) {
       // board와 comment는 1짝씩 커플이므로 같이 생성된다.
-      DB::statement('Create Table IF NOT EXISTS ' . 'board_' . $tableName . ' like board');
-      DB::statement('Create Table IF NOT EXISTS ' . 'comment_' . $tableName . ' like comment');
+      DB::statement('Create Table IF NOT EXISTS ' . 'board_' . $tableName . ' like board_basic');
+      DB::statement('Create Table IF NOT EXISTS ' . 'comment_' . $tableName . ' like comment_basic');
     }
 
     return redirect()->route('admin.board')->with('message', '게시판이 등록되었습니다!');
@@ -71,7 +82,56 @@ class AdminBoardController extends Controller
   public function edit(string $boardIdx)
   {
     $listData = BoardTableList::find($boardIdx);
+    $logData = BoardLog::where('board_idx', $boardIdx)->orderBy('idx', 'desc')->get();
 
-    return view('admin.board.edit', ['listData' => $listData]);
+    return view('admin.board.edit', ['listData' => $listData, 'logData' => $logData]);
+  }
+
+  public function update(string $boardIdx, Request $request)
+  {
+    $data = $request->input();
+
+    $validator = Validator::make($data, [
+      'board_idx' => 'required',
+      'user_email' => 'required',
+      'table_name' => 'required|regex:/^[a-z0-9]+$/',
+      'table_board_title' => 'required|max:255',
+    ])->validate();
+
+    DB::beginTransaction();
+
+    try {
+      BoardTableList::find($boardIdx)->
+      update([
+        'user_email' => $data['user_email'],
+        'table_name' => $data['table_name'],
+        'table_board_title' => $data['table_board_title'],
+        'table_created_at' => $data['table_created_at']
+      ]);
+
+      BoardLog::create([
+        'board_idx' => $data['board_idx'],
+        'user_email' => $data['user_email'],
+        'table_name' => $data['table_name'],
+        'table_board_title' => $data['table_board_title'],
+        'table_created_at' => $data['table_created_at']
+      ]);
+
+      DB::commit();
+    } catch (Exception $e) {
+      DB::rollback();
+      return back()->withErrors(['error' => $e->getMessage()]);
+    }
+
+    if (!Schema::hasTable('board_' . $data['table_name'])) {
+      // board와 comment는 1짝씩 커플이므로 같이 수정한다.
+      DB::rollback();
+      DB::statement(
+        'RENAME TABLE ' . 'board_' . $data['old_table_name'] . ' TO ' . 'board_' . $data['table_name'] .
+        ', ' . 'comment_' . $data['old_table_name'] . ' TO ' . 'comment_' . $data['table_name']
+      );
+    }
+
+    return redirect()->route('admin.board.edit', ['boardIdx' => $data['board_idx']])->with('message', '게시판이 수정되었습니다!');
   }
 }
