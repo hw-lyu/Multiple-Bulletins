@@ -19,7 +19,8 @@
         <td>{{ $data['table_created_at'] }}</td>
         <td>
           <div class="btn-group" role="group" aria-label="수정/삭제 그룹">
-            <a href="{{ route('admin.board.edit', ['boardIdx' => $data['idx']]) }}" class="btn btn-sm btn-primary" role="button" aria-disabled="true">수정</a>
+            <a href="{{ route('admin.board.edit', ['boardIdx' => $data['idx']]) }}" class="btn btn-sm btn-primary"
+               role="button" aria-disabled="true">수정</a>
             <a href="#" class="btn btn-sm btn-danger" role="button" aria-disabled="true">삭제</a>
           </div>
         </td>
@@ -27,4 +28,7 @@
     @endforeach
     </tbody>
   </table>
+  <div class="pagination-wrap">
+    {{ $listData->links() }}
+  </div>
 @endsection
