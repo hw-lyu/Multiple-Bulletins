@@ -250,13 +250,19 @@ class BoardService
   public function getList(string $tableName)
   {
     $auth = Auth::user() ?? [];
-    $boardTableListData = $this->boardTableListRepository->getList();
 
     // $auth['grade'] - 1: 일반회원, 2: 관리자
     if (!empty($auth['grade']) && $auth['grade'] === 2) {
+      $boardTableListData = $this->boardTableListRepository->getAllList();
       $listData = $this->boardRepository->getAllList(paginateNum: '3');
     } else {
+      $boardTableListData = $this->boardTableListRepository->getList(whereData: ['board_state' => 'n']);
+      $collection = collect($boardTableListData->toArray());
       $listData = $this->boardRepository->getList(boardState: 'N', paginateNum: '3');
+      // 페이지 접근 예외처리
+      if ($collection->doesntContain('table_name', $tableName)) {
+        return ['error' => '죄송합니다. 이 페이지에 접근할 권한이 없습니다.'];
+      }
     }
 
     return ['auth' => $auth, 'listData' => $listData, 'boardTableListData' => $boardTableListData, 'tableName' => $tableName];

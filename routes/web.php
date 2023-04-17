@@ -80,3 +80,4 @@ Route::get('/admin/board/create', [AdminBoardController::class, 'create'])->midd
 Route::post('/admin/board/store', [AdminBoardController::class, 'store'])->middleware('auth')->name('admin.board.store');
 Route::get('/admin/board/{boardIdx}/edit', [AdminBoardController::class, 'edit'])->middleware('auth')->name('admin.board.edit');
 Route::patch('/admin/board/{boardIdx}', [AdminBoardController::class, 'update'])->middleware('auth')->name('admin.board.update');
+Route::delete('/admin/board/{boardIdx}', [AdminBoardController::class, 'destroy'])->middleware('auth')->name('admin.board.destroy');

@@ -13,8 +13,18 @@ class BoardTableListRepository
     $this->boardTableList = $boardTableList;
   }
 
-  public function getList()
+  public function getList(array $whereData = ['col' => 'val1'])
   {
-    return $this->boardTableList->get();
+    return $this->boardTableList
+      ->where($whereData)
+      ->orderBy('idx', 'desc')
+      ->get();
+  }
+
+  public function getAllList()
+  {
+    return $this->boardTableList
+      ->orderBy('idx', 'desc')
+      ->get();
   }
 }

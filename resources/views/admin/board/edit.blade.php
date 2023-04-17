@@ -59,7 +59,7 @@
     <div class="log-list" style="height: 200px; overflow: hidden; overflow-y: auto;">
       @foreach($logData as $data)
         <p class="lh-sm mb-1">[{{ $data['table_created_at'] }}] {{ $data['user_email'] }}님께서 테이블 이름
-          : {{ $data['table_name'] }} / 게시판 제목 : {{ $data['table_board_title'] }} 내용을 등록하셨습니다.</p>
+          : {{ $data['table_name'] }} / 게시판 제목 : {{ $data['table_board_title'] }} / 게시판 상태 여부 : {{ ($data['board_state'] === 'n' ? '공개 ' : '비공개') }} 내용을 등록하셨습니다.</p>
       @endforeach
     </div>
   </div>

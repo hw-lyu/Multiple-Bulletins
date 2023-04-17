@@ -4,8 +4,10 @@
   <div class="inner">
     <ul class="board-list">
       @foreach($boardTableListData as $boardTableList)
-        <li><a href="{{ route('board.index', str_replace('_', '/', $boardTableList['table_name'])) }}"
-               class="link">{{ $boardTableList['table_board_title'] }}</a></li>
+        <li><a
+            href="{{ route('board.index', str_replace('_', '/', $boardTableList['table_name'])) }}"
+            class="link {{ $boardTableList['board_state'] === 'y' ? 'text-secondary fst-italic' : '' }}">{{ ($boardTableList['board_state'] === 'y'? '(비공개)' : '').$boardTableList['table_board_title'] }}</a>
+        </li>
       @endforeach
     </ul>
     @if(!empty($auth))

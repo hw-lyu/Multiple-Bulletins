@@ -134,4 +134,34 @@ class AdminBoardController extends Controller
 
     return redirect()->route('admin.board.edit', ['boardIdx' => $data['board_idx']])->with('message', '게시판이 수정되었습니다!');
   }
+
+  public function destroy(string $boardIdx)
+  {
+    // 비공개로 변경될시 해당 게시판 비공개 및 파일, 글은 그대로 보존하는 형식으로 진행
+    $list = BoardTableList::find($boardIdx);
+    $userEmail = Auth::user()['email'];
+    $listBoardState = $list['board_state'] === 'n' ? 'y' : 'n';
+    DB::beginTransaction();
+
+    try {
+      $list->update([
+        'board_state' => $listBoardState
+      ]);
+
+      BoardLog::create([
+        'user_email' => $userEmail,
+        'board_idx' => $list['idx'],
+        'table_name' => $list['table_name'],
+        'table_board_title' => $list['table_board_title'],
+        'board_state' => $listBoardState
+      ]);
+
+      DB::commit();
+    } catch (Exception $e) {
+      DB::rollback();
+      return back()->withErrors(['error' => $e->getMessage()]);
+    }
+
+    return redirect()->route('admin.board')->with('message', '게시판이 ' . ($listBoardState === 'n' ? '공개 ' : '비공개') . ' 상태로 변경되었습니다!');
+  }
 }
