@@ -58,7 +58,8 @@ class BoardService
     try {
       // 해당파일 삭제 및 디비 값 삭제
       // * n+1 해결 해야함. 54-61
-      if (!empty($boardContentDeleteImg)) {
+
+      if (count($boardContentDeleteImg)) {
         foreach (array_unique($boardContentDeleteImg) as $fileImg) {
           $str = str_replace(url('') . '/storage/img/', '', $fileImg);
 
@@ -148,7 +149,7 @@ class BoardService
     DB::beginTransaction();
     try {
       // 해당파일 삭제 및 디비 값 삭제
-      if (!empty($boardContentDeleteImg)) {
+      if (count($boardContentDeleteImg)) {
         foreach (array_unique($boardContentDeleteImg) as $fileImg) {
           $str = str_replace(url('') . '/storage/img/', '', $fileImg);
 
