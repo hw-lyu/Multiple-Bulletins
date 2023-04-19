@@ -62,6 +62,7 @@ class BoardController extends Controller
   {
     try {
       $result = $this->boardService->showPost(request: $request, tableName: $tableName, idx: $idx);
+      $boardTitle = $this->boardService->getBoardTitle(tableName: $tableName);
 
       if (!empty($result['error'])) {
         throw new Exception($result['error']);
@@ -70,7 +71,7 @@ class BoardController extends Controller
       return back()->withErrors(['error' => $e->getMessage()]);
     }
 
-    return view('board.detail', ['tableName' => $tableName, ...$result]);
+    return view('board.detail', ['tableName' => $tableName, 'boardTitle' => $boardTitle, ...$result]);
   }
 
   public function edit(string $tableName, int $idx)

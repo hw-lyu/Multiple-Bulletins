@@ -27,4 +27,11 @@ class BoardTableListRepository
       ->orderBy('idx', 'desc')
       ->get();
   }
+
+  public function getBoardTitle(string $tableName)
+  {
+    return $this->boardTableList
+      ->where('table_name', $tableName)
+      ->value('table_board_title');
+  }
 }

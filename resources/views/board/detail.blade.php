@@ -6,7 +6,7 @@
       @if($boardDetail['board_state'] === 'y')
         <div class="text-bg-danger">현재 글은 삭제된 글입니다.</div>
       @endif
-      <h3 class="board-title">게시판 제목</h3>
+      <h3 class="board-title">{{ $boardTitle }}</h3>
       <div class="head">
         <div class="list-util-wrap">
           <a href="{{ route('board.index', ['tableName' => $tableName]) }}">리스트</a>
