@@ -103,7 +103,7 @@ class BoardController extends Controller
     return redirect()->route('board.show', ['idx' => $result['boardIdx'], 'tableName' => $tableName]);
   }
 
-  public function destroy(string $tableName, int $idx)
+  public function destroy(int $idx)
   {
     try {
       $result = $this->boardService->destroyPost($idx);
