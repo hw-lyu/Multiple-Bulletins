@@ -27,21 +27,23 @@ use App\Http\Controllers\PasswordController;
 |
 */
 
-//메인
+// 메인
 Route::get('/', [BoardController::class, 'index'])->name('home');
 
-//로그인
+// 로그인
 Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::post('/login-check', [LoginController::class, 'authenticate'])->name('login.check');
-//로그아웃
+
+// 로그아웃
 Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 
-//가입
+// 가입
 Route::get('/join', [JoinController::class, 'index'])->name('join');
-//가입등록
+
+// 가입등록
 Route::post('/register', [UserRegisterController::class, 'userRegister'])->name('register');
 
-//이메일 인증 관련
+// 이메일 인증 관련
 Route::get('/email/verify', [EmailController::class, 'notice'])->middleware('auth')->name('verification.notice');
 Route::get('/email/verify/{id}/{hash}', [EmailController::class, 'verify'])->middleware(['auth', 'signed'])->name('verification.verify');
 Route::post('/email/verification-notification', [EmailController::class, 'send'])->middleware(['auth', 'throttle:6,1'])->name('verification.send');
@@ -60,7 +62,6 @@ Route::get('/board/{tableName}/{idx}', [BoardController::class, 'show'])->name('
 Route::get('/board/{tableName}/{idx}/edit', [BoardController::class, 'edit'])->name('board.edit');
 Route::patch('/board/{tableName}/{idx}', [BoardController::class, 'update'])->name('board.update');
 Route::delete('/board/{tableName}/{idx}', [BoardController::class, 'destroy'])->name('board.destroy');
-
 Route::post('/board/like/{tableName}/{idx}', [BoardController::class, 'like'])->name('board.like');
 
 // 코멘트
