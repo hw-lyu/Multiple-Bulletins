@@ -17,3 +17,6 @@
     </div>
   </section>
 @endsection
+@push('scripts')
+  @vite(['resources/js/admin.js'])
+@endpush

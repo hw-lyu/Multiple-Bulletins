@@ -6,6 +6,7 @@
       <th>No</th>
       <th>테이블 이름</th>
       <th>게시판 이름</th>
+      <th>카테고리</th>
       <th>생성일</th>
       <th>수정 / 상태 변경</th>
     </tr>
@@ -16,6 +17,7 @@
         <td>{{ $data['idx'] }}</td>
         <td>{{ $data['table_name'] }}</td>
         <td>{{ $data['table_board_title'] }}</td>
+        <td>{{ $data['board_cate'] }}</td>
         <td>{{ $data['table_created_at'] }}</td>
         <td>
           <div class="btn-group" role="group" aria-label="수정/삭제 그룹">

@@ -4,6 +4,11 @@
     "src": "resources/js/app.js",
     "isEntry": true
   },
+  "resources/js/admin.js": {
+    "file": "assets/admin.47d12745.js",
+    "src": "resources/js/admin.js",
+    "isEntry": true
+  },
   "resources/sass/app.scss": {
     "file": "assets/app.06a158f0.css",
     "src": "resources/sass/app.scss",

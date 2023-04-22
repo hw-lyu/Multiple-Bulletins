@@ -31,15 +31,18 @@ class AdminBoardController extends Controller
 
   public function store(Request $request)
   {
-    $data = $request->input();
+    $data = $request->all();
 
     $validator = Validator::make($data, [
       'board_url' => 'required|regex:/^[a-z0-9]+$/',
       'board_title' => 'required|max:255',
+      'board_cate' => 'required|array'
     ])->validate();
 
     $userEmail = Auth::user()['email'];
     $tableName = $validator['board_url'];
+    $boardCate = implode('|', $validator['board_cate']);
+
     /*
     * CREATE TABLE 문과 트랜잭션 분리
     * CREATE TABLE 등은 암시적 커밋을 유발하는 문
@@ -53,7 +56,8 @@ class AdminBoardController extends Controller
       $boardTabList = BoardTableList::create([
         'user_email' => $userEmail,
         'table_name' => $tableName,
-        'table_board_title' => $validator['board_title']
+        'table_board_title' => $validator['board_title'],
+        'board_cate' => $boardCate
       ]);
 
       BoardLog::create([
@@ -61,7 +65,8 @@ class AdminBoardController extends Controller
         'user_email' => $boardTabList['user_email'],
         'table_name' => $boardTabList['table_name'],
         'table_board_title' => $boardTabList['table_board_title'],
-        'table_created_at' => $boardTabList['table_created_at']
+        'table_created_at' => $boardTabList['table_created_at'],
+        'board_cate' => $boardCate
       ]);
 
       DB::commit();
