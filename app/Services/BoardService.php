@@ -41,9 +41,12 @@ class BoardService
 
   public function storePost(string $tableName, Request $request, array $data = [])
   {
+    $cate = $this->getBoardValue(tableName: $tableName, value: 'board_cate');
+    $cateList = str_replace('|', ',', $cate);
+
     $validator = Validator::make($data, [
       'board_title' => 'required|max:255',
-      'board_cate' => 'required|in:카테1,카테2,카테3',
+      'board_cate' => 'required|in:' . $cateList,
       'photo_state' => 'required',
       'board_content' => 'required',
       'board_content_delete_img' => 'array'
@@ -115,10 +118,12 @@ class BoardService
     return ['idx' => $idx, 'boardDetail' => $boardDetail, 'commentData' => $commentData, 'boardDetailAuth' => $boardDetailAuth, 'boardUpdatedDateState' => $boardUpdatedDateState, 'boardUrl' => $boardUrl, 'grade' => $grade, 'commentView' => $commentView];
   }
 
-  public function editPost(int $idx)
+  public function editPost(int $idx, string $tableName)
   {
     $boardDetail = $this->boardRepository->getByIdx($idx);
     $boardDetailAuth = (Auth::user()['email'] ?? null) === ($boardDetail['user_email'] ?? null) ? 1 : 0;
+    $cate = $this->getBoardValue(tableName: $tableName, value: 'board_cate');
+    $cateList = explode('|', $cate);
 
     if ($boardDetailAuth === 0) {
       return ['error' => '작성자 글에 접속할 수 없습니다.'];
@@ -128,14 +133,17 @@ class BoardService
       return ['error' => '해당 글이 없습니다.'];
     }
 
-    return ['idx' => $idx, 'boardDetail' => $boardDetail];
+    return ['idx' => $idx, 'boardDetail' => $boardDetail, 'cateList' => $cateList];
   }
 
   public function updatePost(string $tableName, int $idx, Request $request, array $data = [])
   {
+    $cate = $this->getBoardValue(tableName: $tableName, value: 'board_cate');
+    $cateList = str_replace('|', ',', $cate);
+
     $validator = Validator::make($data, [
       'board_title' => 'required|max:255',
-      'board_cate' => 'required',
+      'board_cate' => 'required|in:' . $cateList,
       'photo_state' => 'required',
       'board_content' => 'required',
       'board_content_delete_img' => 'array'
@@ -269,8 +277,8 @@ class BoardService
     return ['auth' => $auth, 'listData' => $listData, 'boardTableListData' => $boardTableListData, 'tableName' => $tableName];
   }
 
-  public function getBoardTitle(string $tableName)
+  public function getBoardValue(string $tableName, string $value)
   {
-    return $this->boardTableListRepository->getBoardTitle(tableName: $tableName);
+    return $this->boardTableListRepository->getBoardValue(tableName: $tableName, value: $value);
   }
 }

@@ -88,20 +88,24 @@ class AdminBoardController extends Controller
   {
     $listData = BoardTableList::find($boardIdx);
     $logData = BoardLog::where('board_idx', $boardIdx)->orderBy('idx', 'desc')->get();
+    $cateData = explode('|', $listData['board_cate']);
 
-    return view('admin.board.edit', ['listData' => $listData, 'logData' => $logData]);
+    return view('admin.board.edit', ['listData' => $listData, 'cateData' => $cateData, 'logData' => $logData]);
   }
 
   public function update(string $boardIdx, Request $request)
   {
-    $data = $request->input();
+    $data = $request->all();
 
     $validator = Validator::make($data, [
       'board_idx' => 'required',
       'user_email' => 'required',
       'table_name' => 'required|regex:/^[a-z0-9]+$/',
       'table_board_title' => 'required|max:255',
+      'board_cate' => 'required|array'
     ])->validate();
+
+    $boardCate = implode('|', $validator['board_cate']);
 
     DB::beginTransaction();
 
@@ -111,7 +115,8 @@ class AdminBoardController extends Controller
         'user_email' => $data['user_email'],
         'table_name' => $data['table_name'],
         'table_board_title' => $data['table_board_title'],
-        'table_created_at' => $data['table_created_at']
+        'table_created_at' => $data['table_created_at'],
+        'board_cate' => $boardCate
       ]);
 
       BoardLog::create([
@@ -119,7 +124,8 @@ class AdminBoardController extends Controller
         'user_email' => $data['user_email'],
         'table_name' => $data['table_name'],
         'table_board_title' => $data['table_board_title'],
-        'table_created_at' => $data['table_created_at']
+        'table_created_at' => $data['table_created_at'],
+        'board_cate' => $boardCate
       ]);
 
       DB::commit();
@@ -158,6 +164,7 @@ class AdminBoardController extends Controller
         'board_idx' => $list['idx'],
         'table_name' => $list['table_name'],
         'table_board_title' => $list['table_board_title'],
+        'board_cate' => $list['board_cate'],
         'board_state' => $listBoardState
       ]);
 

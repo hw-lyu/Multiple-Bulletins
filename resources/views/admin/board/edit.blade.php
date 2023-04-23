@@ -2,7 +2,7 @@
 @section('admin-content')
   <form action="{{ route('admin.board.update', ['boardIdx' => $listData['idx']]) }}" method="post">
     @csrf
-    @method('patch')
+    @method('put')
     <input type="hidden" name="old_table_name" value="{{ $listData['table_name'] }}">
     <div class="row mb-3">
       <label for="boardIdx" class="col-sm-2 col-form-label">등록번호</label>
@@ -32,6 +32,20 @@
                value="{{ $listData['table_board_title'] }}">
       </div>
     </div>
+    <div class="row mb-3 cate-group">
+      <div class="col-sm-2">
+        <label for="boardCate" class="col-form-label">게시판 카테고리</label>
+        <button type="button" class="btn btn-link btn-cate-add">카테고리<br>생성 추가</button>
+      </div>
+      <div class="col-sm-10 input-box">
+        @foreach($cateData as $val)
+          <input type="text" @class([
+            'form-control',
+            'mt-2' => !$loop->first])
+          {{ $loop->first ?  "id=boardCate" : ''}} name="board_cate[]" value="{{ $val }}">
+        @endforeach
+      </div>
+    </div>
     <div class="row mb-3">
       <label for="tableCreatedAt" class="col-sm-2 col-form-label">테이블 생성일</label>
       <div class="col-sm-10">
@@ -59,7 +73,8 @@
     <div class="log-list" style="height: 200px; overflow: hidden; overflow-y: auto;">
       @foreach($logData as $data)
         <p class="lh-sm mb-1">[{{ $data['table_created_at'] }}] {{ $data['user_email'] }}님께서 테이블 이름
-          : {{ $data['table_name'] }} / 게시판 제목 : {{ $data['table_board_title'] }} / 게시판 상태 여부 : {{ ($data['board_state'] === 'n' ? '공개 ' : '비공개') }} 내용을 등록하셨습니다.</p>
+          : {{ $data['table_name'] }} / 게시판 제목 : {{ $data['table_board_title'] }} / 게시판 상태 여부
+          : {{ ($data['board_state'] === 'n' ? '공개 ' : '비공개') }} 내용을 등록하셨습니다.</p>
       @endforeach
     </div>
   </div>

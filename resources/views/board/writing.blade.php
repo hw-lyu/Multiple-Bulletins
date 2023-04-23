@@ -15,9 +15,9 @@
                value="{{ old('board_title') }}">
         <select class="form-select board-cate" aria-label="Default select" name="board_cate">
           <option value="분류" {{ old('board_cate') === '분류' ? 'selected' : ''  }}>분류</option>
-          <option value="카테1" {{ old('board_cate') === '카테1' ? 'selected' : ''  }}>카테1</option>
-          <option value="카테2" {{ old('board_cate') === '카테2' ? 'selected' : ''  }}>카테2</option>
-          <option value="카테3" {{ old('board_cate') === '카테3' ? 'selected' : ''  }}>카테3</option>
+          @foreach($cateList as $cate)
+            <option value="{{ $cate }}" {{ old('board_cate') === $cate ? 'selected' : ''  }}>{{ $cate }}</option>
+          @endforeach
         </select>
       </div>
       <div class="content mt-3">
@@ -33,39 +33,39 @@
   @push('scripts')
     <script src="{{ asset('lib/ckeditor.js') }}"></script>
     <script>
-      class MyUploadAdapter {
-        constructor(loader) {
-          // The file loader instance to use during the upload.
-          this.loader = loader;
-        }
+        class MyUploadAdapter {
+            constructor(loader) {
+                // The file loader instance to use during the upload.
+                this.loader = loader;
+            }
 
-        // Starts the upload process.
-        upload() {
-          return this.loader.file
-            .then(file => new Promise((resolve, reject) => {
+            // Starts the upload process.
+            upload() {
+                return this.loader.file
+                    .then(file => new Promise((resolve, reject) => {
 
-              this._initRequest();
-              this._initListeners(resolve, reject, file);
-              this._sendRequest(file);
-            }));
-        }
+                        this._initRequest();
+                        this._initListeners(resolve, reject, file);
+                        this._sendRequest(file);
+                    }));
+            }
 
-        // Aborts the upload process.
-        abort() {
-          if (this.xhr) {
-            this.xhr.abort();
-          }
-        }
+            // Aborts the upload process.
+            abort() {
+                if (this.xhr) {
+                    this.xhr.abort();
+                }
+            }
 
-        // Initializes the XMLHttpRequest object using the URL passed to the constructor.
-        _initRequest() {
-          const xhr = this.xhr = new XMLHttpRequest();
+            // Initializes the XMLHttpRequest object using the URL passed to the constructor.
+            _initRequest() {
+                const xhr = this.xhr = new XMLHttpRequest();
 
-          // Note that your request may look different. It is up to you and your editor
-          // integration to choose the right communication channel. This example uses
-          // a POST request with JSON as a data structure but your configuration
-          // could be different.
-          xhr.open('POST', '{{ route('upload.store', ['tableName' => $tableName]).'?_token='.csrf_token() }}', true);
+                // Note that your request may look different. It is up to you and your editor
+                // integration to choose the right communication channel. This example uses
+                // a POST request with JSON as a data structure but your configuration
+                // could be different.
+                xhr.open('POST', '{{ route('upload.store', ['tableName' => $tableName]).'?_token='.csrf_token() }}', true);
           xhr.responseType = 'json';
         }
 

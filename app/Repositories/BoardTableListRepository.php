@@ -28,10 +28,10 @@ class BoardTableListRepository
       ->get();
   }
 
-  public function getBoardTitle(string $tableName)
+  public function getBoardValue(string $tableName, string $value)
   {
     return $this->boardTableList
       ->where('table_name', $tableName)
-      ->value('table_board_title');
+      ->value($value);
   }
 }

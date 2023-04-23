@@ -38,7 +38,10 @@ class BoardController extends Controller
 
   public function create(string $tableName)
   {
-    return view('board.writing', ['tableName' => $tableName]);
+    $cate = $this->boardService->getBoardValue(tableName: $tableName, value: 'board_cate');
+    $cateList = explode('|', $cate);
+
+    return view('board.writing', ['tableName' => $tableName, 'cateList' => $cateList]);
   }
 
   public function store(string $tableName, Request $request)
@@ -62,7 +65,7 @@ class BoardController extends Controller
   {
     try {
       $result = $this->boardService->showPost(request: $request, tableName: $tableName, idx: $idx);
-      $boardTitle = $this->boardService->getBoardTitle(tableName: $tableName);
+      $boardTitle = $this->boardService->getBoardValue(tableName: $tableName, value: 'table_board_title');
 
       if (!empty($result['error'])) {
         throw new Exception($result['error']);
@@ -77,7 +80,7 @@ class BoardController extends Controller
   public function edit(string $tableName, int $idx)
   {
     try {
-      $result = $this->boardService->editPost($idx);
+      $result = $this->boardService->editPost(idx: $idx, tableName: $tableName);
 
       if (!empty($result['error'])) {
         throw new Exception($result['error']);
@@ -86,7 +89,7 @@ class BoardController extends Controller
       return back()->withErrors(['error' => $e->getMessage()]);
     }
 
-    return view('board.modify', ['idx' => $idx, 'boardDetail' => $result['boardDetail'], 'tableName' => $tableName]);
+    return view('board.modify', ['idx' => $idx, 'boardDetail' => $result['boardDetail'], 'cateList' => $result['cateList'], 'tableName' => $tableName]);
   }
 
   public function update(string $tableName, int $idx, Request $request)
