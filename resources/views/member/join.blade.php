@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 @section('title', '가입')
 @section('content')
-  <form class="mt-3 inner" method="post" action="{{ route('register') }}">
+  <form class="mt-3 p-0 inner" method="post" action="{{ route('register') }}">
     @csrf
     <div class="mb-3">
       <label for="exampleFormControlInput0" class="visually-hidden">이름</label>
@@ -17,7 +17,7 @@
       <label for="inputPassword" class="visually-hidden">패스워드</label>
       <input type="password" class="form-control" id="inputPassword" name="password" placeholder="password">
     </div>
-    <div>
+    <div class="mb-3">
       <label for="inputPassword1" class="visually-hidden">패스워드 확인</label>
       <input type="password" class="form-control" id="inputPassword1" name="password_confirmation" placeholder="password confirmed">
     </div>
@@ -30,8 +30,8 @@
       <span> &amp; </span>
       <a href="">개인정보처리방침</a>
     </div>
-    <div class="row mt-3">
-      <button type="submit" class="btn btn-primary mb-3">인증메일 발송</button>
+    <div class="mt-3">
+      <button type="submit" class="btn btn-primary w-100">인증메일 발송</button>
     </div>
   </form>
 @endsection
