@@ -16,6 +16,8 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\PasswordController;
 
+use App\Http\Controllers\PolicyController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -53,6 +55,10 @@ Route::get('/forgot-password', [PasswordController::class, 'index'])->middleware
 Route::post('/forgot-password', [PasswordController::class, 'emailSend'])->middleware('guest')->name('password.email');
 Route::get('/reset-password/{token}', [PasswordController::class, 'reset'])->middleware('guest')->name('password.reset');
 Route::post('/reset-password', [PasswordController::class, 'update'])->middleware('guest')->name('password.update');
+
+// Policy - 이용약관 : service / 개인정보처리방침 : privacy
+Route::get('/privacy', [PolicyController::class, 'privacy'])->name('policy.privacy');
+Route::get('/service', [PolicyController::class, 'service'])->name('policy.service');
 
 // 게시판
 Route::get('/board/{tableName}', [BoardController::class, 'index'])->name('board.index');

@@ -26,9 +26,9 @@
       <label class="form-check-label" for="termsCheck">
         다음을 확인하였으며, 이에 동의합니다
       </label>
-      <a href="">이용약관</a>
+      <a href="{{ route('policy.service') }}">이용약관</a>
       <span> &amp; </span>
-      <a href="">개인정보처리방침</a>
+      <a href="{{ route('policy.privacy') }}">개인정보처리방침</a>
     </div>
     <div class="mt-3">
       <button type="submit" class="btn btn-primary w-100">인증메일 발송</button>
