@@ -269,7 +269,7 @@ class BoardService
       $listData = $this->boardRepository->getList(boardState: 'N', paginateNum: '3');
 
       // 페이지 접근 예외처리 : doesntContain() - 컬렉션에 항목이 포함되어 있지 않은지 여부를 확인 (포함이 되어있지 않으면 true)
-      if ($collection->doesntContain('table_name', $tableName)) {
+      if (count($collection) && $collection->doesntContain('table_name', $tableName)) {
         return ['error' => '죄송합니다. 이 페이지에 접근할 권한이 없습니다.'];
       }
     }
