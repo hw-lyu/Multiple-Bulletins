@@ -4,6 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+use Illuminate\Support\Facades\DB;
+
 return new class extends Migration {
   /**
    * Run the migrations.
@@ -19,6 +21,8 @@ return new class extends Migration {
       $table->string('table_name', 200)->nullable(false)->comment('게시판 테이블 생성 이름');
       $table->string('table_board_title', 255)->nullable(false)->comment('게시판 이름');
 
+      $table->text('board_cate')->nullable()->comment('게시판 카테고리');
+
       $table->timestamp('table_created_at')->useCurrent()->comment('테이블 생성일자');
       $table->timestamp('table_updated_at')->useCurrentOnUpdate()->nullable()->comment('테이블 수정일자');
 
@@ -28,6 +32,16 @@ return new class extends Migration {
 
       $table->unique('table_name');
     });
+
+    if (Schema::hasTable('board_basic') && Schema::hasTable('board_table_list')) {
+      DB::table('board_table_list')->insert(
+        [
+          'user_email' => '-',
+          'table_name' => 'basic',
+          'table_board_title' => '베이직 기본 게시판'
+        ]
+      );
+    }
   }
 
   /**
