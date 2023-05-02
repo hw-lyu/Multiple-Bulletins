@@ -17,7 +17,6 @@ return new class extends Migration {
       $table->string('user_email', 200)->nullable(false)->comment('유저이메일');
       $table->string('board_cate', 50)->nullable(false)->comment('글분류');
       $table->string('board_title', 100)->nullable(false)->comment('글제목');
-      $table->string('writer', 50)->nullable(false)->comment('글작성자');
 
       $table->timestamp('view_created_at')->useCurrent()->comment('글 작성일');
       $table->timestamp('view_updated_at')->useCurrentOnUpdate()->nullable()->comment('글 변경일');
@@ -30,7 +29,7 @@ return new class extends Migration {
       $table->enum('photo_state', ['n', 'y'])->default('n')->comment('사진 여부');
       $table->enum('board_state', ['n', 'y'])->default('n')->comment('게시글 삭제 여부');
 
-      $table->timestamp('deleted_at')->comment('글 삭제일');
+      $table->timestamp('deleted_at')->nullable()->comment('글 삭제일');
     });
   }
 

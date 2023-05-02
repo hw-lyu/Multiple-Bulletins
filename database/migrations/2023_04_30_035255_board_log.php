@@ -19,6 +19,7 @@ return new class extends Migration {
       $table->string('user_email', 200)->nullable(false)->comment('수정한 유저 이메일');
       $table->string('table_name', 200)->nullable(false)->comment('변경된 테이블 이름');
       $table->string('table_board_title', 255)->nullable(false)->comment('변경된 게시판 테이블 이름');
+      $table->text('board_cate')->nullable()->comment('게시판 카테고리');
 
       $table->timestamp('table_created_at')->useCurrent()->comment('테이블 생성일자');
 

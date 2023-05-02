@@ -41,7 +41,7 @@ class CommentController extends Controller
     return redirect()->route('board.show', ['idx' => $result['board_idx'], 'tableName' => $tableName]);
   }
 
-  public function edit(int $idx, string $tableName)
+  public function edit(string $tableName, int $idx)
   {
     try {
       $result = $this->commentService->edit(idx: $idx);
@@ -52,7 +52,7 @@ class CommentController extends Controller
     return $result;
   }
 
-  public function update(int $idx, Request $request, string $tableName)
+  public function update(string $tableName, int $idx, Request $request)
   {
     try {
       $result = $this->commentService->update(idx: $idx, request: $request);
@@ -63,7 +63,7 @@ class CommentController extends Controller
     return $result;
   }
 
-  public function destroy(int $idx, string $tableName)
+  public function destroy(string $tableName, int $idx)
   {
     try {
       $result = $this->commentService->destroy(idx: $idx);
