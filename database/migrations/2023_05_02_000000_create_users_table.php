@@ -30,7 +30,8 @@ return new class extends Migration {
 
     if (Schema::hasTable('users')) {
       DB::table('users')->insert([
-        ['id' => 1, 'name' => '테스트', 'email' => 'test@test', 'password' => Hash::make(123), 'grade' => 2]
+        ['id' => 1, 'name' => '테스트', 'email' => 'test@test', 'password' => Hash::make(123), 'grade' => 2],
+        ['id' => 2, 'name' => '테스트2', 'email' => 'test2@test', 'password' => Hash::make(123), 'grade' => 2]
       ]);
     }
   }

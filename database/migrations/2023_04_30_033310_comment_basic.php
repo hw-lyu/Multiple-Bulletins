@@ -24,7 +24,7 @@ return new class extends Migration {
       $table->text('board_idx')->comment('등록한 게시판 번호');
       $table->text('depth_idx')->nullable()->comment('부모의 idx-내idx를 기준으로 text 저장 (부모 idx가 없으면 내 코멘트의 idx만 저장)');
       $table->unsignedInteger('group_idx')->nullable()->comment('댓글 Root 번호 (최상위 부모 값)');
-      $table->unsignedInteger('group_order')->nullable()->comment('부모 코멘트 번호, 댓글 및 대댓글 순서 (루트기준)');
+      $table->unsignedInteger('group_order')->default(1)->comment('부모 코멘트 번호, 댓글 및 대댓글 순서 (루트기준)');
 
       $table->enum('comment_state', ['n', 'y'])->default('n')->comment('코멘트 삭제 여부');
     });

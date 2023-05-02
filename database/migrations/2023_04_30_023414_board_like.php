@@ -16,6 +16,8 @@ return new class extends Migration {
       $table->increments('idx')->comment('좋아요 번호');
       $table->string('user_email', 200)->nullable(false)->comment('유저이메일');
       $table->unsignedInteger('board_idx')->nullable(false)->comment('게시글 번호');
+      $table->string('table_name', 255)->nullable(false)->comment('파일 등록한 게시판 테이블명');
+      
       $table->timestamp('created_at')->useCurrent()->comment('좋아요 등록일');
 
       $table->unique(['user_email', 'board_idx']);
