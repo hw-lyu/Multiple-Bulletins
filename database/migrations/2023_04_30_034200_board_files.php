@@ -17,7 +17,8 @@ return new class extends Migration {
 
       $table->string('user_email', 200)->nullable(false)->comment('유저 이메일');
       $table->string('file_name', 255)->nullable(false)->comment('파일이름(확장자명 포함)');
-      $table->string('file_path', 255)->nullable(false)->comment('파일경로');
+      $table->string('file_url', 255)->nullable(false)->comment('파일경로');
+      $table->string('table_name', 255)->nullable(false)->comment('파일 등록한 게시판 테이블명');
 
       $table->timestamp('file_upload_date')->useCurrent()->comment('파일 업로드 일');
     });
