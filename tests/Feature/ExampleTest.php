@@ -20,4 +20,11 @@ class ExampleTest extends TestCase
 
     $response->assertStatus(200);
   }
+
+  public function test_관리자_로그인_안되있을시_어드민_접속(): void
+  {
+    $response = $this->get('/admin');
+
+    $response->assertStatus(302);
+  }
 }
