@@ -81,7 +81,7 @@
             @csrf
             <input type="hidden" name="board_idx" value="{{ $idx }}">
             <input type="hidden" name="board_url" value="{{ $boardUrl }}">
-            <textarea name="comment_content" id="" cols="30" rows="10"></textarea>
+            <textarea name="comment_content" cols="30" rows="10"></textarea>
             <button type="submit" class="btn btn-link btn-comment-add">등록</button>
           </form>
         </div>
