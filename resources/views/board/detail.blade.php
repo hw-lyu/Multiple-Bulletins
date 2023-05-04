@@ -79,6 +79,7 @@
           <div class="name mb-1">{{ Illuminate\Support\Facades\Auth::user()['email'] }} 님</div>
           <form action="{{ route('comments.store', ['tableName' => $tableName]) }}" method="post">
             @csrf
+            <input type="hidden" name="comment_view" value="{{ $commentView }}">
             <input type="hidden" name="board_idx" value="{{ $idx }}">
             <input type="hidden" name="board_url" value="{{ $boardUrl }}">
             <textarea name="comment_content" cols="30" rows="10"></textarea>
