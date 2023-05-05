@@ -249,8 +249,18 @@
               }
 
               commentBox.querySelector('.comment-content .content').innerHTML = `${data.comment_content}`;
-              commentBox.querySelector('.info .created_at').append(` (수정일 ${data.comment_updated_at})`);
               commentBox.querySelector('.list-util-wrap').innerHTML = `<button type="button" class="btn btn-link btn-comment-edit">수정</button> <button type="button" class="btn btn-link btn-comment-remove">삭제</button>`;
+
+              if (commentBox.querySelector('.info .updated_at')) {
+                commentBox.querySelector('.info .updated_at').innerHTML = ` (수정일 ${data.comment_updated_at})`;
+              } else {
+                let spanEle = document.createElement('span');
+
+                commentBox.querySelector('.info').appendChild(spanEle);
+
+                spanEle.className = 'updated_at';
+                spanEle.innerHTML = ` (수정일 ${data.comment_updated_at})`;
+              }
             })
             .catch((error) => {
               console.error('Error:', error);
@@ -333,7 +343,7 @@
                     <div class="comment-content">
                       <div class="info">
                         ${ele.comment_writer}<span class='created_at'>(작성일 ${ele.comment_created_at})</span>
-                        ${(ele.comment_updated_at !== null && ele.comment_updated_at !== ele.comment_created_at) ? "(수정일 " + ele.comment_updated_at + ")" : ''}
+                        ${(ele.comment_updated_at !== null && ele.comment_updated_at !== ele.comment_created_at) ? "<span class='updated_at'>(수정일 " + ele.comment_updated_at + ")</span>" : ''}
                         ${ele.comment_deleted_at !== null ? "(삭제일 " + ele.comment_deleted_at + ")" : ''}
                     </div>
                   `;
