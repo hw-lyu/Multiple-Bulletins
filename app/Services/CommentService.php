@@ -54,7 +54,7 @@ class CommentService
     $comment = $this->commentRepository->create(data: [
       'board_idx' => $validator['board_idx'],
       'comment_writer' => $user,
-      'comment_content' => $validator['comment_content'],
+      'comment_content' => $validator['comment_content']
     ]);
 
     // 내 코멘트 등록따른 업데이트 처리
@@ -117,7 +117,8 @@ class CommentService
     $this->commentRepository->update(whereData: ['idx' => $comment['idx']], data: ['comment_content' => $commentContent]);
 
     return response()->json([
-      'comment_content' => $commentContent
+      'comment_content' => $commentContent,
+      'comment_updated_at' => date('Y-m-d H:i:s')
     ]);
   }
 

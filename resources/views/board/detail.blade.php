@@ -249,6 +249,7 @@
               }
 
               commentBox.querySelector('.comment-content .content').innerHTML = `${data.comment_content}`;
+              commentBox.querySelector('.info .created_at').append(` (수정일 ${data.comment_updated_at})`);
               commentBox.querySelector('.list-util-wrap').innerHTML = `<button type="button" class="btn btn-link btn-comment-edit">수정</button> <button type="button" class="btn btn-link btn-comment-remove">삭제</button>`;
             })
             .catch((error) => {
@@ -331,7 +332,9 @@
                   data-comment-idx="${ele.idx}" data-group-idx="${ele.group_idx}" data-group-order="${ele.group_order}" style="${ele.group_order ? 'padding-left: ' + ele.group_order + '%' : ''}">
                     <div class="comment-content">
                       <div class="info">
-                        ${ele.comment_writer}(작성일 ${ele.comment_created_at})${ele.comment_deleted_at !== null ? "(삭제일 " + ele.comment_deleted_at + ")" : ''}
+                        ${ele.comment_writer}<span class='created_at'>(작성일 ${ele.comment_created_at})</span>
+                        ${(ele.comment_updated_at !== null && ele.comment_updated_at !== ele.comment_created_at) ? "(수정일 " + ele.comment_updated_at + ")" : ''}
+                        ${ele.comment_deleted_at !== null ? "(삭제일 " + ele.comment_deleted_at + ")" : ''}
                     </div>
                   `;
 
