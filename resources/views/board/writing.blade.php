@@ -2,7 +2,7 @@
 @section('title', '글쓰기')
 @section('content')
   <div class="inner board-detail-wrap">
-    <h3 class="board-title">게시판 제목</h3>
+    <h3 class="board-title">{{ $boardTitle }}</h3>
     <div class="btn-wrap mb-3">
       <a href="{{ route('home') }}" class="link">리스트</a>
     </div>
