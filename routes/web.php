@@ -39,6 +39,10 @@ Route::post('/login-check', [LoginController::class, 'authenticate'])->name('log
 // 로그아웃
 Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 
+// naver-login | naver-logout
+Route::get('/naverLogin', [LoginController::class, 'naverLogin'])->name('login.naver');
+Route::get('/member/Oauth2C', [LoginController::class, 'naverCallBack'])->name('login.naver.callback');
+
 // 가입
 Route::get('/join', [JoinController::class, 'index'])->name('join');
 

@@ -32,6 +32,7 @@
           @endguest
         </div>
       </form>
+      <a href="{{ route('login.naver') }}" class="d-flex" target="_blank"><img src="{{ asset('images/naver-login.png') }}" alt="네이버 로그인" width="187" height="50"></a>
     </div>
   </div>
 </header>
