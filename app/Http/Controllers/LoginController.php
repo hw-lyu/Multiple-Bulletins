@@ -52,7 +52,7 @@ class LoginController extends Controller
     return redirect()->away($apiURL);
   }
 
-  public function naverCallBack()
+  public function naverCallBack(Response $response)
   {
     $client_id = env('NAVER_CLIENT_ID');
     $client_secret = env('NAVER_CLIENT_SECRET');
@@ -73,9 +73,11 @@ class LoginController extends Controller
       $responseArr = json_decode($res, true);
       $encryptedToken = encrypt($responseArr['refresh_token']);
 
-//      return $response()->header('Authorization', $responseArr['token_type'] . ' ' . $responseArr['access_token'])
-//        ->header('expires', $responseArr['expires_in'])
-//        ->withCookie(cookie(name: 'refresh_token', value: $encryptedToken, minutes: $responseArr['expires_in'], path: null, domain: null, secure: true, httpOnly: true, raw: null, sameSite: 'None'));
+      return $response->withHeaders([
+        'Authorization' => $responseArr['token_type'] . ' ' . $responseArr['access_token'],
+        'expires' => $responseArr['expires_in']
+      ])
+        ->withCookie('refresh_token', $encryptedToken, $responseArr['expires_in'], null, null, true, true, false, 'None');
 
     } else {
       echo "Error 내용:" . $res;
