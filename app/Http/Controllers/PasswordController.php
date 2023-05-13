@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 
+use App\Http\Requests\PasswordEmailSend;
+use App\Http\Requests\PasswordUpdate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
@@ -17,9 +19,9 @@ class PasswordController extends Controller
     return view('auth.forgot-password');
   }
 
-  public function emailSend(Request $request)
+  public function emailSend(Request $request, PasswordEmailSend $passwordEmailSend)
   {
-    $request->validate(['email' => 'required|email']);
+    $passwordEmailSend->validated();
 
     $status = Password::sendResetLink(
       $request->only('email')
@@ -37,13 +39,9 @@ class PasswordController extends Controller
     return view('auth.reset-password', ['token' => $token, 'email' => $email]);
   }
 
-  public function update(Request $request)
+  public function update(Request $request, PasswordUpdate $passwordUpdate)
   {
-    $request->validate([
-      'token' => 'required',
-      'email' => 'required|email',
-      'password' => 'required|min:8|confirmed',
-    ]);
+    $passwordUpdate->validated();
 
     $status = Password::reset(
       $request->only('email', 'password', 'password_confirmation', 'token'),
