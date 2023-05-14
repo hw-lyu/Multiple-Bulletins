@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 
-use App\Models\BoardLog;
-use App\Models\BoardTableList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Validator;
+
+use App\Models\BoardLog;
+use App\Models\BoardTableList;
+
+use App\Http\Requests\AdminBoardStore;
+use App\Http\Requests\AdminBoardUpdate;
 
 use Exception;
 
@@ -29,15 +32,10 @@ class AdminBoardController extends Controller
     return view('admin.board.create');
   }
 
-  public function store(Request $request)
+  public function store(AdminBoardStore $adminBoardStore)
   {
-    $data = $request->all();
 
-    $validator = Validator::make($data, [
-      'board_url' => 'required|regex:/^[a-z0-9]+$/',
-      'board_title' => 'required|max:255',
-      'board_cate' => 'required|array'
-    ])->validate();
+    $validator = $adminBoardStore->validated();
 
     $userEmail = Auth::user()['email'];
     $tableName = $validator['board_url'];
@@ -93,17 +91,10 @@ class AdminBoardController extends Controller
     return view('admin.board.edit', ['listData' => $listData, 'cateData' => $cateData, 'logData' => $logData]);
   }
 
-  public function update(string $boardIdx, Request $request)
+  public function update(string $boardIdx, Request $request, AdminBoardUpdate $adminBoardUpdate)
   {
     $data = $request->all();
-
-    $validator = Validator::make($data, [
-      'board_idx' => 'required',
-      'user_email' => 'required',
-      'table_name' => 'required|regex:/^[a-z0-9]+$/',
-      'table_board_title' => 'required|max:255',
-      'board_cate' => 'required|array'
-    ])->validate();
+    $validator = $adminBoardUpdate->validated();
 
     $boardCate = implode('|', $validator['board_cate']);
 
