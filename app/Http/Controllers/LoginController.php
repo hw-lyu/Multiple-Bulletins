@@ -56,8 +56,8 @@ class LoginController extends Controller
   {
     $client_id = env('NAVER_CLIENT_ID');
     $client_secret = env('NAVER_CLIENT_SECRET');
-    $code = $_GET["code"];;
-    $state = $_GET["state"];;
+    $code = $_GET["code"];
+    $state = $_GET["state"];
     $redirectURI = urlencode("http://localhost/member/Oauth2C");
     $url = "https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id=" . $client_id . "&client_secret=" . $client_secret . "&redirect_uri=" . $redirectURI . "&code=" . $code . "&state=" . $state;
     $ch = curl_init();
@@ -73,11 +73,25 @@ class LoginController extends Controller
       $responseArr = json_decode($res, true);
       $encryptedToken = encrypt($responseArr['refresh_token']);
 
-      return $response->withHeaders([
-        'Authorization' => $responseArr['token_type'] . ' ' . $responseArr['access_token'],
-        'expires' => $responseArr['expires_in']
-      ])
-        ->withCookie('refresh_token', $encryptedToken, $responseArr['expires_in'], null, null, true, true, false, 'None');
+      $apiUrl = 'https://openapi.naver.com/v1/nid/me';
+
+      $ch2 = curl_init($apiUrl);
+      curl_setopt($ch2, CURLOPT_HTTPHEADER, [
+        'Authorization: ' . $responseArr['token_type'] . ' ' . $responseArr['access_token'],
+        'Content-Type: application/json',
+        'Accept: application/json',
+        'expires: ' . $responseArr['expires_in']
+      ]);
+      curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
+
+      $response = curl_exec($ch2);
+      curl_close($ch2);
+
+      //return $response->withCookie('refresh_token', $encryptedToken, $responseArr['expires_in'], null, null, true, true, false, 'None');
+//     -> withHeaders([
+//        'Authorization' => $responseArr['token_type'] . ' ' . $responseArr['access_token'],
+//        'expires' => $responseArr['expires_in']
+//      ])
 
     } else {
       echo "Error 내용:" . $res;
