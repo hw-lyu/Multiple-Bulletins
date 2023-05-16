@@ -87,11 +87,7 @@ class LoginController extends Controller
       $response = curl_exec($ch2);
       curl_close($ch2);
 
-      //return $response->withCookie('refresh_token', $encryptedToken, $responseArr['expires_in'], null, null, true, true, false, 'None');
-//     -> withHeaders([
-//        'Authorization' => $responseArr['token_type'] . ' ' . $responseArr['access_token'],
-//        'expires' => $responseArr['expires_in']
-//      ])
+      // cookie - refresh_token', $encryptedToken, $responseArr['expires_in'], null, null, true, true, false, 'None'
 
     } else {
       echo "Error 내용:" . $res;
