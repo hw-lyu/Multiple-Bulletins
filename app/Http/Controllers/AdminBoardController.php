@@ -35,7 +35,7 @@ class AdminBoardController extends Controller
   public function store(AdminBoardStore $adminBoardStore)
   {
 
-    $validator = $adminBoardStore->validated();
+    $validator = $adminBoardStore->all();
 
     $userEmail = Auth::user()['email'];
     $tableName = $validator['board_url'];
@@ -94,7 +94,7 @@ class AdminBoardController extends Controller
   public function update(string $boardIdx, Request $request, AdminBoardUpdate $adminBoardUpdate)
   {
     $data = $request->all();
-    $validator = $adminBoardUpdate->validated();
+    $validator = $adminBoardUpdate->all();
 
     $boardCate = implode('|', $validator['board_cate']);
 
