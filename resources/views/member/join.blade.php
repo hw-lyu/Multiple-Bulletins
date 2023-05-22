@@ -3,15 +3,19 @@
 @section('content')
   <form class="mt-3 p-0 inner" method="post" action="{{ route('register') }}">
     @csrf
+    @if(count($socialArr))
+      <p>현재 {{ $socialType }} 소셜 회원가입 중입니다.</p>
+    @endif
     <div class="mb-3">
       <label for="exampleFormControlInput0" class="visually-hidden">이름</label>
       <input type="text" class="form-control" id="exampleFormControlInput0" name="name" placeholder="name"
-             value="{{ old('name') }}">
+             value="{{ old('name') ?? $socialArr['name'] }}" {{ count($socialArr) ? 'readonly' : '' }}>
     </div>
     <div class="mb-3">
       <label for="exampleFormControlInput1" class="visually-hidden">이메일 주소</label>
-      <input type="email" class="form-control" id="exampleFormControlInput1" name="email" placeholder="name@example.com"
-             value="{{ old('email') }}">
+      <input type="email" class="form-control" id="exampleFormControlInput1"
+             name="email" placeholder="name@example.com"
+             value="{{ old('email') ?? $socialArr['email'] }}" {{ count($socialArr) ? 'readonly' : '' }}>
     </div>
     <div class="mb-3">
       <label for="inputPassword" class="visually-hidden">패스워드</label>
@@ -19,7 +23,8 @@
     </div>
     <div class="mb-3">
       <label for="inputPassword1" class="visually-hidden">패스워드 확인</label>
-      <input type="password" class="form-control" id="inputPassword1" name="password_confirmation" placeholder="password confirmed">
+      <input type="password" class="form-control" id="inputPassword1" name="password_confirmation"
+             placeholder="password confirmed">
     </div>
     <div class="form-check mt-1">
       <input class="form-check-input" type="checkbox" id="termsCheck" name="terms_check" value="1">

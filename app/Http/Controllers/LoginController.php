@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use App\Services\UserService;
 
 use Exception;
@@ -52,7 +51,7 @@ class LoginController extends Controller
     return redirect()->away($apiURL);
   }
 
-  public function naverCallBack(Response $response)
+  public function naverCallBack()
   {
     $client_id = env('NAVER_CLIENT_ID');
     $client_secret = env('NAVER_CLIENT_SECRET');
@@ -84,11 +83,16 @@ class LoginController extends Controller
       ]);
       curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
 
-      $response = curl_exec($ch2);
+      $res2 = curl_exec($ch2);
       curl_close($ch2);
 
-      // cookie - refresh_token', $encryptedToken, $responseArr['expires_in'], null, null, true, true, false, 'None'
+      $resArr = json_decode($res2, true);
 
+      if ($resArr['message'] === 'success') {
+        return response()->view('member.join', ['socialArr' => $resArr['response'], 'socialType' => 'naver']);
+      }
+
+      return back()->withErrors(['error' => '다시 시도해주세요.' . $resArr["message"]]);
     } else {
       echo "Error 내용:" . $res;
     }
